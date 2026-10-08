@@ -90,4 +90,4 @@ Membuat aplikasi web portofolio pribadi modern berorientasi *dark-mode* yang men
 1. Seluruh tata letak halaman (profil & koleksi proyek) responsif dan cocok pada tampilan *desktop* maupun *mobile*.
 2. Fungsi modal `Ubah Informasi Diri` dan `Simpan Proyek Baru` berjalan tanpa mengganggu layout halaman utama.
 3. Fitur salin email instan pada widget kontak berfungsi memberikan respon balasan/toast ke pengguna.
-4. Pencarian pada halaman koleksi proyek secara fleksibel dapat menyaring kartu proyek berdasarkan kata kunci judul maupun *tech stack*.
+4. Pencarian pada halaman koleksi proyek secara fleksibel dapat menyaring kartu proyek berdasarkan kata kunci judul maupun *tech stack*. 

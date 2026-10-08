@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { Globe, Github, ExternalLink, CheckCircle } from "lucide-react";
-import { recentProjects } from "@/data/profile";
 import type { Project } from "@/data/profile";
+import { useProjectsStore } from "@/stores/use-projects";
 
 const statusStyles: Record<string, string> = {
   Production: "bg-green-500/20 text-green-400 ring-green-500/30",
@@ -17,6 +17,7 @@ const categoryStyles: Record<string, string> = {
 };
 
 export function RecentProjects() {
+  const recentProjects = useProjectsStore((s) => s.projects).slice(0, 2);
   return (
     <section className="space-y-6" aria-labelledby="projects-heading">
       <div className="flex items-center justify-between">

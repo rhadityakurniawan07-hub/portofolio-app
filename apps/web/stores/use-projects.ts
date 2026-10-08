@@ -7,8 +7,8 @@ import { newProjectId } from "@/lib/portfolio";
 interface ProjectsState {
   projects: Project[];
   addProject: (p: Omit<Project, "id">) => void;
-  updateProject: (id: Project["id"], p: Partial<Project>) => void;
-  removeProject: (id: Project["id"]) => void;
+  updateProject: (id: number | string, p: Partial<Project>) => void;
+  removeProject: (id: number | string) => void;
   resetProjects: () => void;
 }
 

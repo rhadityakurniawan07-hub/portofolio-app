@@ -92,6 +92,11 @@ export function QuickContacts() {
             <div className="space-y-1">
               <span className="text-xs font-medium text-muted-foreground">{contact.label}</span>
               <span className="text-sm text-foreground truncate">{contact.value}</span>
+              {contact.copyable && (
+                <span role="status" className="sr-only">
+                  {copied === contact.label ? "Email disalin" : ""}
+                </span>
+              )}
             </div>
             {contact.external && (
               <span className="inline-flex items-center gap-1 text-xs text-muted-foreground group-hover:text-primary transition-colors">

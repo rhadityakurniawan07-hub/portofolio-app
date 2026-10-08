@@ -1,28 +1,28 @@
 {
-  "name": "@repo/ui",
+  "name": "@repo/database",
   "version": "0.0.0",
   "private": true,
-  "exports": {
-    "./*": "./src/*.tsx"
-  },
+  "main": "./index.ts",
+  "types": "./index.ts",
   "scripts": {
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio",
     "lint": "eslint . --max-warnings 0",
-    "generate:component": "turbo gen react-component",
     "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@babel/preset-typescript": "8.0.1",
     "@repo/eslint-config": "*",
     "@repo/typescript-config": "*",
     "@types/node": "26.4.1",
-    "@types/react": "19.2.18",
-    "@types/react-dom": "19.2.5",
     "eslint": "10.9.1",
+    "prisma": "^5.22.0",
     "typescript": "7.0.2"
-  },
-  "dependencies": {
-    "lucide-react": "0.468.0",
-    "react": "19.2.8",
-    "react-dom": "19.2.8"
   }
 }

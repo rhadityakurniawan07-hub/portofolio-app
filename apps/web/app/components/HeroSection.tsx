@@ -2,13 +2,18 @@
 
 import { useState } from "react";
 import { Mail, MapPin, Github, Linkedin, Twitter, ExternalLink } from "lucide-react";
-import { profileData } from "@/data/profile";
+import { useProfileStore } from "@/stores/use-profile";
+import { useOwnerStore } from "@/stores/use-owner";
+import { ProfileModal } from "./ProfileModal";
 
 export function HeroSection() {
   const [copied, setCopied] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profile = useProfileStore((s) => s.profile);
+  const ownerMode = useOwnerStore((s) => s.ownerMode);
 
   const handleCopyEmail = async () => {
-    await navigator.clipboard.writeText(profileData.email);
+    await navigator.clipboard.writeText(profile.email);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -26,8 +31,8 @@ export function HeroSection() {
               </div>
             </div>
             <span className={`absolute bottom-2 right-2 h-4 w-4 rounded-full border-4 border-background ${
-              profileData.availabilityStatus === "available" ? "bg-green-500" : "bg-gray-500"
-            }`} aria-label={profileData.availability} />
+              (profile as { availabilityStatus?: string }).availabilityStatus === "available" ? "bg-green-500" : "bg-gray-500"
+            }`} aria-label={profile.availability} />
           </div>
         </div>
 
@@ -37,27 +42,30 @@ export function HeroSection() {
               <span className="relative h-1.5 w-1.5 rounded-full bg-green-500" aria-hidden="true">
                 <span className="absolute inset-0 h-1.5 w-1.5 rounded-full bg-green-500 opacity-75 animate-ping" />
               </span>
-              {profileData.availability}
+              {profile.availability}
             </span>
             <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
               <MapPin className="h-4 w-4" aria-hidden="true" />
-              {profileData.location}
+              {profile.location}
             </span>
           </div>
 
           <h1 id="hero-heading" className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
-            {profileData.name}
+            {profile.name}
           </h1>
-          <p className="text-lg text-muted-foreground sm:text-xl">{profileData.tagline}</p>
-          <p className="max-w-2xl text-base text-muted-foreground">{profileData.bio}</p>
+          <p className="text-lg text-muted-foreground sm:text-xl">{profile.tagline}</p>
+          <p className="max-w-2xl text-base text-muted-foreground">{profile.bio}</p>
 
           <div className="flex flex-wrap items-center justify-center gap-3 md:justify-start">
-            <button
-              className="rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
-              aria-label="Ubah profil"
-            >
-              Ubah Profil
-            </button>
+            {ownerMode && (
+              <button
+                onClick={() => setProfileOpen(true)}
+                className="rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+                aria-label="Ubah profil"
+              >
+                Ubah Profil
+              </button>
+            )}
             <button
               onClick={handleCopyEmail}
               className="flex items-center gap-2 rounded-lg border border-gray-700 px-6 py-3 text-sm font-semibold transition-colors hover:bg-gray-800"
@@ -70,7 +78,7 @@ export function HeroSection() {
 
           <div className="flex flex-wrap items-center justify-center gap-4 md:justify-start pt-2">
             <a
-              href={profileData.github}
+              href={profile.github}
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground transition-colors hover:text-primary"
@@ -79,7 +87,7 @@ export function HeroSection() {
               <Github className="h-5 w-5" />
             </a>
             <a
-              href={profileData.linkedin}
+              href={profile.linkedin}
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground transition-colors hover:text-primary"
@@ -88,7 +96,7 @@ export function HeroSection() {
               <Linkedin className="h-5 w-5" />
             </a>
             <a
-              href={profileData.twitter}
+              href={profile.twitter}
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground transition-colors hover:text-primary"
@@ -99,6 +107,7 @@ export function HeroSection() {
           </div>
         </div>
       </div>
+      <ProfileModal open={profileOpen} onClose={() => setProfileOpen(false)} />
     </section>
   );
 }

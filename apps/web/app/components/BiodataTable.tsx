@@ -1,9 +1,9 @@
 "use client";
 
 import { Code, Database, Globe, Layers, Terminal } from "lucide-react";
-import { biodataFields } from "@/data/profile";
+import { useProfileStore } from "@/stores/use-profile";
 
-interface BiodataField {
+interface BiodataRow {
   label: string;
   value: string;
   isBadges?: boolean;
@@ -20,13 +20,29 @@ const techIcons: Record<string, React.ComponentType<{ className?: string }>> = {
 };
 
 export function BiodataTable() {
+  const profile = useProfileStore((s) => s.profile);
+
+  const rows: BiodataRow[] = [
+    { label: "Nama Lengkap", value: profile.name },
+    { label: "Peran Utama", value: profile.role },
+    {
+      label: "Spesialisasi",
+      value: profile.specializations.join(", "),
+      isBadges: true,
+      badges: profile.specializations,
+    },
+    { label: "Domisili", value: profile.location },
+    { label: "Ketersediaan", value: profile.availability },
+    { label: "Penguasaan Bahasa", value: profile.languages.join(", ") },
+  ];
+
   return (
     <section className="space-y-6" aria-labelledby="biodata-heading">
       <h2 id="biodata-heading" className="text-2xl font-bold tracking-tight">
         Biodata Lengkap
       </h2>
       <dl className="divide-y divide-gray-800">
-        {biodataFields.map((field: BiodataField, index: number) => (
+        {rows.map((field: BiodataRow) => (
           <div
             key={field.label}
             className="flex flex-col gap-2 py-4 sm:flex-row sm:items-center sm:gap-4"

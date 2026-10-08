@@ -4,6 +4,8 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu, X, User, Briefcase, Settings } from 'lucide-react'
+import { PinPrompt } from './PinPrompt'
+import { useOwnerStore } from '@/stores/use-owner'
 
 const navItems = [
   { href: '/', label: 'Data Diri', icon: User },
@@ -13,7 +15,17 @@ const navItems = [
 export function Navbar() {
   const pathname = usePathname()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [ownerMode, setOwnerMode] = useState(false)
+  const [pinOpen, setPinOpen] = useState(false)
+  const ownerMode = useOwnerStore((s) => s.ownerMode)
+  const logout = useOwnerStore((s) => s.logout)
+
+  const handleOwnerClick = () => {
+    if (ownerMode) {
+      logout()
+    } else {
+      setPinOpen(true)
+    }
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-800 bg-black/80 backdrop-blur-sm">
@@ -53,7 +65,7 @@ export function Navbar() {
           )}
 
           <button
-            onClick={() => setOwnerMode(!ownerMode)}
+            onClick={handleOwnerClick}
             className="hidden sm:flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors hover:bg-gray-800"
             aria-label={ownerMode ? 'Disable owner mode' : 'Enable owner mode'}
             aria-pressed={ownerMode}
@@ -107,7 +119,7 @@ export function Navbar() {
           <div className="border-t border-gray-800 my-2" />
 
           <button
-            onClick={() => setOwnerMode(!ownerMode)}
+            onClick={handleOwnerClick}
             className="w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-base font-medium text-muted-foreground hover:bg-gray-800 hover:text-foreground transition-colors"
             aria-pressed={ownerMode}
           >
@@ -123,6 +135,7 @@ export function Navbar() {
           )}
         </div>
       </div>
+      <PinPrompt open={pinOpen} onClose={() => setPinOpen(false)} />
     </header>
   )
 }

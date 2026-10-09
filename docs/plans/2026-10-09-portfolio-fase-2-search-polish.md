@@ -8,7 +8,7 @@
 
 **Tech Stack:** Next.js 16 App Router, React 19, Tailwind 3 dark-mode, Zustand 5 (read-only di task ini), lucide-react, Node built-in test runner.
 
-**Spec:** `PRD.md` (bagian C.2 pencarian & counter, acceptance criteria 1–4) + `docs/superpowers/specs/2026-10-08-portfolio-cms-design.md` (bagian "Fase 2 (di luar spec ini)").
+**Spec:** `PRD.md` (bagian C.2 pencarian & counter, acceptance criteria 1–4) + `docs/specs/2026-10-08-portfolio-cms-design.md` (bagian "Fase 2 (di luar spec ini)").
 
 ## Global Constraints
 

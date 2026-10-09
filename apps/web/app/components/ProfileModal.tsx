@@ -47,6 +47,9 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
       }
     >
       <div className="space-y-4">
+        <p className="text-sm text-muted-foreground">
+          Perbarui nama, deskripsi singkat, dan detail kontak di bawah secara langsung.
+        </p>
         <div>
           <label className="text-sm font-medium" htmlFor="pf-name">Nama Lengkap</label>
           <input id="pf-name" className={field} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />

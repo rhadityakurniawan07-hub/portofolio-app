@@ -72,25 +72,29 @@ export function ProjectModal({ open, onClose, editingId }: { open: boolean; onCl
       }
     >
       <div className="space-y-4">
+        <p className="text-sm text-muted-foreground">
+          Lengkapi parameter repositori atau aplikasi yang telah Anda selesaikan untuk disimpan ke arsip karya pribadi.
+        </p>
         <div>
-          <label className="text-sm font-medium" htmlFor="pj-title">Nama Proyek *</label>
+          <label className="text-sm font-medium" htmlFor="pj-title">NAMA PROYEK *</label>
           <input id="pj-title" className={field} value={title} onChange={(e) => setTitle(e.target.value)} />
         </div>
         <div>
-          <label className="text-sm font-medium" htmlFor="pj-desc">Deskripsi Singkat Proyek *</label>
+          <label className="text-sm font-medium" htmlFor="pj-desc">DESKRIPSI SINGKAT PROYEK *</label>
           <textarea id="pj-desc" rows={3} className={field} value={description} onChange={(e) => setDescription(e.target.value)} />
         </div>
         <div>
-          <label className="text-sm font-medium" htmlFor="pj-tech">Teknologi / Bahasa (pisahkan koma) *</label>
-          <input id="pj-tech" className={field} value={tech} onChange={(e) => setTech(e.target.value)} placeholder="Next.js, Node.js" />
+          <label className="text-sm font-medium" htmlFor="pj-tech">TEKNOLOGI / BAHASA PEMROGRAMAN *</label>
+          <input id="pj-tech" className={field} value={tech} onChange={(e) => setTech(e.target.value)} placeholder="Next.js, Node.js" aria-describedby="pj-tech-help" />
+          <p id="pj-tech-help" className="mt-1 text-xs text-muted-foreground">Pisahkan dengan koma (,)</p>
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className="text-sm font-medium" htmlFor="pj-link">Tautan Web / Link Proyek</label>
+            <label className="text-sm font-medium" htmlFor="pj-link">TAUTAN WEB / LINK PROYEK</label>
             <input id="pj-link" className={field} value={link} onChange={(e) => setLink(e.target.value)} placeholder="https://..." />
           </div>
           <div>
-            <label className="text-sm font-medium" htmlFor="pj-year">Tanggal / Tahun Pembuatan *</label>
+            <label className="text-sm font-medium" htmlFor="pj-year">TANGGAL / TAHUN PEMBUATAN *</label>
             <input id="pj-year" className={field} value={year} onChange={(e) => setYear(e.target.value)} placeholder="2024" />
           </div>
         </div>

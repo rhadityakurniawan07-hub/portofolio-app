@@ -31,7 +31,7 @@ export function Navbar() {
     <header className="sticky top-0 z-50 w-full border-b border-gray-800 bg-black/80 backdrop-blur-sm">
       <nav className="container flex h-16 items-center justify-between" aria-label="Main navigation">
         <Link href="/" className="flex items-center gap-2 font-mono text-xl font-semibold text-primary" aria-label="Go to homepage">
-          rhaditya.me
+          fatih.me
         </Link>
 
         <div className="hidden md:flex md:items-center md:gap-6">

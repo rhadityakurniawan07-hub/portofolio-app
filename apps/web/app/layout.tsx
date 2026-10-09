@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import { Navbar } from './components/Navbar'
+import { Footer } from './components/Footer'
 
 const geistSans = Geist({
   subsets: ['latin'],
@@ -16,13 +17,13 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'MUHAMMAD RHADITYA KURNIAWAN | Full-Stack Web Developer',
-  description: 'Portofolio pribadi MUHAMMAD RHADITYA KURNIAWAN - Full-Stack Web Developer specializing in Next.js, Node.js, PostgreSQL, dan Tailwind CSS',
+  title: 'fatih.me | Full-Stack Web Developer',
+  description: 'Portofolio pribadi Muhammad Fatih Al-Ghazali - Full-Stack Web Developer specializing in Next.js, Node.js, PostgreSQL, dan Tailwind CSS',
   keywords: ['Full-Stack Developer', 'Next.js', 'Node.js', 'React', 'TypeScript', 'PostgreSQL', 'Tailwind CSS'],
-  authors: [{ name: 'MUHAMMAD RHADITYA KURNIAWAN' }],
+  authors: [{ name: 'Muhammad Fatih Al-Ghazali' }],
   openGraph: {
-    title: 'MUHAMMAD RHADITYA KURNIAWAN | Full-Stack Web Developer',
-    description: 'Portofolio pribadi MUHAMMAD RHADITYA KURNIAWAN',
+    title: 'fatih.me | Full-Stack Web Developer',
+    description: 'Portofolio pribadi Muhammad Fatih Al-Ghazali',
     type: 'website',
     locale: 'id_ID',
   },
@@ -45,6 +46,7 @@ export default function RootLayout({
       <body className="min-h-screen bg-background font-sans antialiased">
         <Navbar />
         <main>{children}</main>
+        <Footer />
       </body>
     </html>
   )

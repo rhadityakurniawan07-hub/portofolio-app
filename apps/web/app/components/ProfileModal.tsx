@@ -33,7 +33,7 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
         availability: form.availability,
       }),
       ...validateProfileUrls({ github: form.github, telegram: form.telegram, whatsapp: form.whatsapp }),
-      ...validateOptionalUrl("Foto Profil", form.photoUrl),
+      ...validateOptionalUrl("Foto Profil", form.photoUrl ?? ""),
     ];
     if (errs.length > 0) {
       setErrors(errs);
@@ -46,7 +46,7 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
       github: form.github.trim() ? normalizeUrl(form.github) : form.github,
       telegram: form.telegram.trim() ? normalizeUrl(form.telegram) : form.telegram,
       whatsapp: form.whatsapp.trim() ? normalizeUrl(form.whatsapp) : form.whatsapp,
-      photoUrl: form.photoUrl.trim() ? normalizeUrl(form.photoUrl) : "",
+      photoUrl: form.photoUrl?.trim() ? normalizeUrl(form.photoUrl) : "",
     });
     setErrors([]);
     onClose();
@@ -119,7 +119,7 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
           <input
             id="pf-photo"
             className={field}
-            value={form.photoUrl}
+            value={form.photoUrl ?? ""}
             onChange={(e) => setForm({ ...form, photoUrl: e.target.value })}
             placeholder="https://..."
             aria-describedby="pf-photo-help"

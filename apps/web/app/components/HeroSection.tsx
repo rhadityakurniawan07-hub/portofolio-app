@@ -45,7 +45,7 @@ export function HeroSection() {
                 />
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center text-6xl font-bold text-primary/30">
-                  FA
+                  {(profile.name.split(/\s+/).map((w) => w[0]).slice(0, 2).join("") || "FA").toUpperCase()}
                 </div>
               )}
             </div>

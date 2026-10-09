@@ -1,8 +1,9 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Modal } from "@repo/ui/modal";
 import { useProfileStore } from "@/stores/use-profile";
 import { parseDaftar, normalizeUrl, validateProfileInput, validateProfileUrls, validateOptionalUrl } from "@/lib/portfolio";
+import { downscaleImage } from "@/lib/photo";
 
 export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const profile = useProfileStore((s) => s.profile);
@@ -10,7 +11,9 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
   const [form, setForm] = useState(profile);
   const [specInput, setSpecInput] = useState(profile.specializations.join(", "));
   const [langInput, setLangInput] = useState(profile.languages.join(", "));
+  const [photoBusy, setPhotoBusy] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (open) {
@@ -21,6 +24,21 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
+
+  const photoValue = (form.photoUrl ?? "").trim();
+
+  const handlePhotoFile = async (f: File | undefined) => {
+    if (!f) return;
+    setPhotoBusy(true);
+    try {
+      const dataUrl = await downscaleImage(f);
+      setForm((prev) => ({ ...prev, photoUrl: dataUrl }));
+    } catch (e) {
+      setErrors([e instanceof Error ? e.message : "Gagal membaca foto"]);
+    } finally {
+      setPhotoBusy(false);
+    }
+  };
 
   const save = () => {
     const errs = [
@@ -33,7 +51,7 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
         availability: form.availability,
       }),
       ...validateProfileUrls({ github: form.github, telegram: form.telegram, whatsapp: form.whatsapp }),
-      ...validateOptionalUrl("Foto Profil", form.photoUrl ?? ""),
+      ...(photoValue.startsWith("data:") ? [] : validateOptionalUrl("Foto Profil", photoValue)),
     ];
     if (errs.length > 0) {
       setErrors(errs);
@@ -46,7 +64,7 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
       github: form.github.trim() ? normalizeUrl(form.github) : form.github,
       telegram: form.telegram.trim() ? normalizeUrl(form.telegram) : form.telegram,
       whatsapp: form.whatsapp.trim() ? normalizeUrl(form.whatsapp) : form.whatsapp,
-      photoUrl: form.photoUrl?.trim() ? normalizeUrl(form.photoUrl) : "",
+      photoUrl: photoValue.startsWith("data:") ? photoValue : photoValue ? normalizeUrl(photoValue) : "",
     });
     setErrors([]);
     onClose();
@@ -75,16 +93,48 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
           Perbarui nama, deskripsi singkat, dan detail kontak di bawah secara langsung.
         </p>
         <div>
-          <label className="text-sm font-medium" htmlFor="pf-photo">Foto Profil (URL)</label>
-          <input
-            id="pf-photo"
-            className={field}
-            value={form.photoUrl ?? ""}
-            onChange={(e) => setForm({ ...form, photoUrl: e.target.value })}
-            placeholder="https://..."
-            aria-describedby="pf-photo-help"
-          />
-          <p id="pf-photo-help" className="mt-1 text-xs text-muted-foreground">Opsional — kosongkan untuk memakai inisial</p>
+          <span className="text-sm font-medium" id="pf-photo-label">Foto Profil</span>
+          <div className="mt-2 flex items-center gap-4">
+            <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-full border border-gray-700 bg-gray-900 text-xl font-bold text-primary/30" aria-hidden="true">
+              {photoValue ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={photoValue} alt="" className="h-full w-full object-cover" />
+              ) : (
+                (form.name.split(/\s+/).map((w) => w[0]).slice(0, 2).join("") || "FA").toUpperCase()
+              )}
+            </div>
+            <div className="flex flex-col items-start gap-2">
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                aria-labelledby="pf-photo-label"
+                onChange={(e) => {
+                  void handlePhotoFile(e.target.files?.[0]);
+                  e.target.value = "";
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => fileRef.current?.click()}
+                disabled={photoBusy}
+                className="rounded-lg border border-gray-700 px-4 py-2 text-sm font-semibold transition-colors hover:bg-gray-800 disabled:opacity-50"
+              >
+                {photoBusy ? "Memproses..." : "Pilih Foto dari Perangkat"}
+              </button>
+              {photoValue && (
+                <button
+                  type="button"
+                  onClick={() => setForm({ ...form, photoUrl: "" })}
+                  className="text-xs font-medium text-muted-foreground hover:text-red-400"
+                >
+                  Hapus foto (kembali ke inisial)
+                </button>
+              )}
+            </div>
+          </div>
+          <p className="mt-1 text-xs text-muted-foreground">JPG/PNG dari perangkat — otomatis diperkecil agar hemat penyimpanan</p>
         </div>
         <div>
           <label className="text-sm font-medium" htmlFor="pf-name">Nama Lengkap</label>

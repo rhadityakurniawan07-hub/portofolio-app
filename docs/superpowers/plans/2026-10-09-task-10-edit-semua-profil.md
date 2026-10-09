@@ -29,4 +29,4 @@
 - [ ] Status ketersediaan jadi pilihan `Tersedia` / `Sibuk` (dropdown) yang memetakan ke `availabilityStatus` (`available` → titik hijau hero, selain itu abu-abu) + teks `availability` tetap input bebas
 - [ ] Simpan via `updateProfile` yang sudah ada (bentuk data tidak berubah, hanya field yang dikirim bertambah) + error inline bila URL tidak valid
 - [ ] Kartu profil + hero otomatis menampilkan hasil baru tanpa ubahan (sudah dari store); badge spesialisasi mengikuti jumlah yang disimpan
-- [ ] Foto Profil via link URL: kolom `photoUrl` di data (default kosong); modal tambah field `Foto Profil (URL)` opsional dengan validasi URL + normalisasi `https://`; hero render `<img>` bila terisi, inisial bila kosong (dengan `onError` fallback ke inisial bila link rusak)
+- [ ] Foto Profil via upload dari perangkat (bukan link): input file `accept="image/*"` di modal + pratinjau + tombol hapus; gambar otomatis diperkecil (maks 512px, JPEG) via helper `downscaleImage` di `apps/web/lib/photo.ts` agar hemat localStorage; hero render foto bila ada, inisial nama bila kosong/rusak (`onError` fallback)

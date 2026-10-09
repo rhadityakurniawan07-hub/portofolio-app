@@ -1,5 +1,5 @@
 "use client";
-import { ExternalLink, Pencil, Trash2, CheckCircle } from "lucide-react";
+import { ExternalLink, Pencil, Trash2 } from "lucide-react";
 import type { Project } from "@/data/profile";
 
 export function ProjectCard({ project, onEdit, onDelete, canManage }: { project: Project; onEdit: () => void; onDelete: () => void; canManage: boolean }) {
@@ -7,8 +7,8 @@ export function ProjectCard({ project, onEdit, onDelete, canManage }: { project:
     <article className="flex flex-col overflow-hidden rounded-xl border border-gray-800 bg-gray-900/50">
       <div className="flex flex-col gap-4 p-6">
         <div className="flex items-center justify-between">
-          <span className="rounded-full bg-primary/20 px-2.5 py-0.5 text-xs font-medium text-primary ring-1 ring-primary/30">
-            {project.year} • {project.category}
+          <span className="text-xs font-medium tracking-wide text-primary">
+            TAHUN {project.year} • {project.category}
           </span>
           <div className="flex items-center gap-2">
             {canManage && (
@@ -26,7 +26,19 @@ export function ProjectCard({ project, onEdit, onDelete, canManage }: { project:
             </a>
           </div>
         </div>
-        <h3 className="text-xl font-bold">{project.title}</h3>
+        <div className="space-y-1">
+          <h3 className="text-xl font-bold">{project.title}</h3>
+          {project.projectUrl && (
+            <a
+              href={project.projectUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block truncate text-xs text-primary hover:underline"
+            >
+              {project.projectUrl.replace(/^https?:\/\//, "")}
+            </a>
+          )}
+        </div>
         <p className="line-clamp-3 text-sm text-muted-foreground">{project.description}</p>
         <div className="flex flex-wrap gap-1.5">
           {project.techStack.map((t) => (
@@ -35,9 +47,17 @@ export function ProjectCard({ project, onEdit, onDelete, canManage }: { project:
             </span>
           ))}
         </div>
-        <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-green-500/20 px-2.5 py-0.5 text-xs font-medium text-green-400 ring-1 ring-green-500/30">
-          <CheckCircle className="h-3 w-3" /> {project.status}
-        </span>
+      </div>
+      <div className="mt-auto border-t border-gray-800 px-6 py-4">
+        <a
+          href={project.projectUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+        >
+          <ExternalLink className="h-4 w-4" aria-hidden="true" />
+          Buka Web Proyek
+        </a>
       </div>
     </article>
   );

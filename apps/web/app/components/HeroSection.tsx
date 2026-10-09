@@ -35,7 +35,9 @@ export function HeroSection() {
                 FA
               </div>
             </div>
-            <span className="absolute bottom-2 right-2 h-4 w-4 rounded-full border-4 border-background bg-green-500" aria-label={profile.availability} />
+            <span className={`absolute bottom-2 right-2 h-4 w-4 rounded-full border-4 border-background ${
+              (profile as { availabilityStatus?: string }).availabilityStatus === "available" ? "bg-green-500" : "bg-gray-500"
+            }`} aria-label={profile.availability} />
           </div>
         </div>
 

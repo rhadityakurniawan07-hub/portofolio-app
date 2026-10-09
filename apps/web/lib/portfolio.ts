@@ -8,6 +8,32 @@ export function parseTechStack(input: string): string[] {
   return [...seen];
 }
 
+export function parseDaftar(input: string): string[] {
+  return parseTechStack(input);
+}
+
+export function validateOptionalUrl(label: string, value: string): string[] {
+  if (!value.trim()) return [];
+  try {
+    new URL(normalizeUrl(value));
+    return [];
+  } catch {
+    return [`${label} tidak valid`];
+  }
+}
+
+export function validateProfileUrls(v: {
+  github: string;
+  telegram: string;
+  whatsapp: string;
+}): string[] {
+  return [
+    ...validateOptionalUrl("GitHub", v.github),
+    ...validateOptionalUrl("Telegram", v.telegram),
+    ...validateOptionalUrl("WhatsApp", v.whatsapp),
+  ];
+}
+
 export function normalizeUrl(input: string): string {
   const v = input.trim();
   if (!v) return "";

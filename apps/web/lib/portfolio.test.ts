@@ -3,9 +3,11 @@ import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import {
   parseTechStack,
+  parseDaftar,
   normalizeUrl,
   validateProjectInput,
   validateProfileInput,
+  validateProfileUrls,
   checkOwnerPin,
 } from "./portfolio.ts";
 
@@ -66,5 +68,25 @@ describe("validateProfileInput", () => {
 describe("checkOwnerPin", () => {
   it("PIN salah ditolak", () => {
     assert.equal(checkOwnerPin("0000"), false);
+  });
+});
+
+describe("parseDaftar", () => {
+  it("split koma, trim, buang kosong, dedup", () => {
+    assert.deepEqual(parseDaftar("Next.js,, Node.js , Next.js"), [
+      "Next.js",
+      "Node.js",
+    ]);
+  });
+});
+
+describe("validateProfileUrls", () => {
+  it("kosong boleh, tanpa protokol tetap valid", () => {
+    assert.deepEqual(validateProfileUrls({ github: "", telegram: "", whatsapp: "" }), []);
+    assert.deepEqual(validateProfileUrls({ github: "github.com/fatih", telegram: "t.me/fatih", whatsapp: "" }), []);
+  });
+  it("menolak URL yang tidak valid", () => {
+    const errs = validateProfileUrls({ github: "http://", telegram: "", whatsapp: "" });
+    assert.ok(errs.some((e) => e.includes("GitHub")));
   });
 });

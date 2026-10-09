@@ -8,7 +8,7 @@
 
 **Tech Stack:** Next.js 16 App Router, React 19, Tailwind 3 dark-mode, Zustand 5 persist, lucide-react, Node built-in test runner (tanpa deps baru).
 
-**Spec:** `docs/specs/2026-10-08-portfolio-cms-design.md`
+**Spec:** `docs/superpowers/specs/2026-10-08-portfolio-cms-design.md`
 
 ## Global Constraints
 

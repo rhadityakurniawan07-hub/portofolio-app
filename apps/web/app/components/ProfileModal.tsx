@@ -70,10 +70,22 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
         </>
       }
     >
-      <div className="max-h-[70vh] space-y-4 overflow-y-auto pr-1">
+      <div className="max-h-[70vh] space-y-4 overflow-y-auto pr-1 text-left">
         <p className="text-sm text-muted-foreground">
           Perbarui nama, deskripsi singkat, dan detail kontak di bawah secara langsung.
         </p>
+        <div>
+          <label className="text-sm font-medium" htmlFor="pf-photo">Foto Profil (URL)</label>
+          <input
+            id="pf-photo"
+            className={field}
+            value={form.photoUrl ?? ""}
+            onChange={(e) => setForm({ ...form, photoUrl: e.target.value })}
+            placeholder="https://..."
+            aria-describedby="pf-photo-help"
+          />
+          <p id="pf-photo-help" className="mt-1 text-xs text-muted-foreground">Opsional — kosongkan untuk memakai inisial</p>
+        </div>
         <div>
           <label className="text-sm font-medium" htmlFor="pf-name">Nama Lengkap</label>
           <input id="pf-name" className={field} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
@@ -113,18 +125,6 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
               <option value="busy">Sibuk</option>
             </select>
           </div>
-        </div>
-        <div>
-          <label className="text-sm font-medium" htmlFor="pf-photo">Foto Profil (URL)</label>
-          <input
-            id="pf-photo"
-            className={field}
-            value={form.photoUrl ?? ""}
-            onChange={(e) => setForm({ ...form, photoUrl: e.target.value })}
-            placeholder="https://..."
-            aria-describedby="pf-photo-help"
-          />
-          <p id="pf-photo-help" className="mt-1 text-xs text-muted-foreground">Opsional — kosongkan untuk memakai inisial</p>
         </div>
         <div>
           <label className="text-sm font-medium" htmlFor="pf-spec">Spesialisasi</label>

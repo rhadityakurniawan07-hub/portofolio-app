@@ -35,6 +35,7 @@ export const profileData = {
   availability: "Terbuka untuk freelance & full-time",
   availabilityStatus: "available",
   email: "fatih@dev.id",
+  photoUrl: "",
   phone: "+62 8xx-xxxx-xxxx",
   github: "https://github.com/fatih",
   linkedin: "https://linkedin.com/in/fatih",

@@ -89,4 +89,10 @@ describe("validateProfileUrls", () => {
     const errs = validateProfileUrls({ github: "http://", telegram: "", whatsapp: "" });
     assert.ok(errs.some((e) => e.includes("GitHub")));
   });
+  it("foto profil opsional tapi harus URL valid bila diisi", async () => {
+    const { validateOptionalUrl } = await import("./portfolio.ts");
+    assert.deepEqual(validateOptionalUrl("Foto Profil", ""), []);
+    assert.deepEqual(validateOptionalUrl("Foto Profil", "example.com/foto.png"), []);
+    assert.ok(validateOptionalUrl("Foto Profil", "http://").some((e) => e.includes("Foto Profil")));
+  });
 });

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Mail, MapPin, MessageSquare } from "lucide-react";
 import { useProfileStore } from "@/stores/use-profile";
@@ -10,8 +10,13 @@ import { ProfileModal } from "./ProfileModal";
 export function HeroSection() {
   const [copied, setCopied] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [imgError, setImgError] = useState(false);
   const profile = useProfileStore((s) => s.profile);
   const ownerMode = useOwnerStore((s) => s.ownerMode);
+
+  useEffect(() => {
+    setImgError(false);
+  }, [profile.photoUrl]);
 
   const handleCopyEmail = async () => {
     try {
@@ -31,9 +36,18 @@ export function HeroSection() {
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/30 to-primary/10 blur-xl" />
             <div className="relative h-full w-full rounded-full border-4 border-gray-700 bg-gray-900 overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent" />
-              <div className="absolute inset-0 flex items-center justify-center text-6xl font-bold text-primary/30">
-                FA
-              </div>
+              {profile.photoUrl && !imgError ? (
+                <img
+                  src={profile.photoUrl}
+                  alt={`Foto profil ${profile.name}`}
+                  className="absolute inset-0 h-full w-full object-cover"
+                  onError={() => setImgError(true)}
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center text-6xl font-bold text-primary/30">
+                  FA
+                </div>
+              )}
             </div>
             <span className={`absolute bottom-2 right-2 h-4 w-4 rounded-full border-4 border-background ${
               (profile as { availabilityStatus?: string }).availabilityStatus === "available" ? "bg-green-500" : "bg-gray-500"

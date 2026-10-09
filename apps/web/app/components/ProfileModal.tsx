@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { Modal } from "@repo/ui/modal";
 import { useProfileStore } from "@/stores/use-profile";
-import { parseDaftar, normalizeUrl, validateProfileInput, validateProfileUrls } from "@/lib/portfolio";
+import { parseDaftar, normalizeUrl, validateProfileInput, validateProfileUrls, validateOptionalUrl } from "@/lib/portfolio";
 
 export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const profile = useProfileStore((s) => s.profile);
@@ -33,6 +33,7 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
         availability: form.availability,
       }),
       ...validateProfileUrls({ github: form.github, telegram: form.telegram, whatsapp: form.whatsapp }),
+      ...validateOptionalUrl("Foto Profil", form.photoUrl),
     ];
     if (errs.length > 0) {
       setErrors(errs);
@@ -45,6 +46,7 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
       github: form.github.trim() ? normalizeUrl(form.github) : form.github,
       telegram: form.telegram.trim() ? normalizeUrl(form.telegram) : form.telegram,
       whatsapp: form.whatsapp.trim() ? normalizeUrl(form.whatsapp) : form.whatsapp,
+      photoUrl: form.photoUrl.trim() ? normalizeUrl(form.photoUrl) : "",
     });
     setErrors([]);
     onClose();
@@ -111,6 +113,18 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
               <option value="busy">Sibuk</option>
             </select>
           </div>
+        </div>
+        <div>
+          <label className="text-sm font-medium" htmlFor="pf-photo">Foto Profil (URL)</label>
+          <input
+            id="pf-photo"
+            className={field}
+            value={form.photoUrl}
+            onChange={(e) => setForm({ ...form, photoUrl: e.target.value })}
+            placeholder="https://..."
+            aria-describedby="pf-photo-help"
+          />
+          <p id="pf-photo-help" className="mt-1 text-xs text-muted-foreground">Opsional — kosongkan untuk memakai inisial</p>
         </div>
         <div>
           <label className="text-sm font-medium" htmlFor="pf-spec">Spesialisasi</label>

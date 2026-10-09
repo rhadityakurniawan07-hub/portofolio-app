@@ -98,6 +98,14 @@ export function HeroSection() {
         )}
       </div>
       <ProfileModal open={profileOpen} onClose={() => setProfileOpen(false)} />
+      {copied && (
+        <div
+          role="status"
+          className="fixed bottom-6 left-1/2 z-[100] -translate-x-1/2 rounded-lg border border-green-500/30 bg-gray-950 px-4 py-2 text-sm font-medium text-green-400 shadow-2xl"
+        >
+          Email disalin ke clipboard
+        </div>
+      )}
     </section>
   );
 }

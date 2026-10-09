@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --background: #0a0a0a;
+  --background: #0F172A;
   --foreground: #ededed;
   --font-geist-sans: 'Geist', 'Geist Fallback', system-ui, sans-serif;
   --font-geist-mono: 'Geist Mono', 'Geist Mono Fallback', monospace;

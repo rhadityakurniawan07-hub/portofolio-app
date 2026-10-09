@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useProjectsStore } from "@/stores/use-projects";
 import { useOwnerStore } from "@/stores/use-owner";
 import { ProjectCard } from "../components/ProjectCard";
@@ -14,6 +14,20 @@ export default function ProjectsPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | string | null>(null);
   const [deleteId, setDeleteId] = useState<number | string | null>(null);
+  const [query, setQuery] = useState("");
+
+  const q = query.trim().toLowerCase();
+  const visible = useMemo(
+    () =>
+      q === ""
+        ? projects
+        : projects.filter(
+            (p) =>
+              p.title.toLowerCase().includes(q) ||
+              p.techStack.some((t) => t.toLowerCase().includes(q))
+          ),
+    [projects, q]
+  );
 
   const deleteTarget = deleteId != null ? projects.find((p) => p.id === deleteId) : undefined;
 
@@ -21,11 +35,12 @@ export default function ProjectsPage() {
     <div className="container py-12 md:py-24">
       <div className="max-w-7xl mx-auto">
         <div className="mb-12">
+          <p className="mb-2 text-xs font-medium text-primary">• ARSIP REPOSITORI PRIBADI</p>
           <h1 className="mb-4 text-3xl font-bold tracking-tight sm:text-4xl">
-            Koleksi Proyek
+            Daftar Proyek Saya
           </h1>
           <p className="text-muted-foreground">
-            Arsip repositori pribadi dan proyek-proyek yang telah dikerjakan.
+            Koleksi dan arsip hasil pembuatan aplikasi & website pribadi.
           </p>
         </div>
 
@@ -47,7 +62,9 @@ export default function ProjectsPage() {
             </svg>
             <input
               type="search"
-              placeholder="Cari proyek (judul, teknologi)..."
+              placeholder="Cari proyek berdasarkan judul atau teknologi (cth: Next.js, CLI)..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
               className="w-full rounded-lg border border-gray-700 bg-gray-900/50 pl-10 pr-4 py-2.5 text-sm placeholder-gray-500 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
               aria-label="Cari proyek"
             />
@@ -65,15 +82,30 @@ export default function ProjectsPage() {
           )}
         </div>
 
-        <p className="text-sm text-muted-foreground">Menampilkan {projects.length} proyek</p>
+        <p className="text-sm text-muted-foreground" role="status">
+          {q === ""
+            ? `Menampilkan ${projects.length} proyek`
+            : `Menampilkan ${visible.length} dari ${projects.length} proyek untuk "${query.trim()}"`}
+        </p>
 
-        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid gap-6 sm:grid-cols-2">
+          {visible.length === 0 && q !== "" && (
+            <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-6 text-center sm:col-span-2">
+              <p className="text-muted-foreground">Tidak ada proyek yang cocok untuk &quot;{query.trim()}&quot;.</p>
+              <button
+                onClick={() => setQuery("")}
+                className="mt-3 rounded-lg border border-gray-700 px-4 py-2 text-sm font-semibold hover:bg-gray-800"
+              >
+                Hapus pencarian
+              </button>
+            </div>
+          )}
           {projects.length === 0 && (
-            <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-6 text-center text-muted-foreground">
+            <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-6 text-center text-muted-foreground sm:col-span-2">
               Belum ada proyek. Klik &quot;Simpan Proyek Baru&quot; untuk menambahkan.
             </div>
           )}
-          {projects.map((project) => (
+          {visible.map((project) => (
             <ProjectCard
               key={project.id}
               project={project}

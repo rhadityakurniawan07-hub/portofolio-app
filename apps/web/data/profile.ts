@@ -75,44 +75,7 @@ export const statsData: StatData[] = [
   },
 ];
 
-export const recentProjects = [
-  {
-    id: 1,
-    title: "Aplikasi Manajemen Santri",
-    description: "Aplikasi web untuk mengelola data santri, kehadiran, dan administrasi pondok dalam satu dasbor terpadu.",
-    techStack: ["React", "Node.js", "Express", "PostgreSQL", "Tailwind CSS"],
-    year: "2024",
-    category: "Online",
-    status: "Production",
-    projectUrl: "https://santri-app.demo.id",
-    githubUrl: "https://github.com/fatih/santri-app",
-    featured: true,
-  },
-  {
-    id: 2,
-    title: "Catatan & Task Manager CLI",
-    description: "Command-line interface untuk mencatat dan mengelola tugas harian dengan dukungan tagging dan prioritas.",
-    techStack: ["Node.js", "TypeScript", "SQLite"],
-    year: "2023",
-    category: "CLI Package",
-    status: "Published",
-    projectUrl: "https://npmjs.com/package/@fatih/task-cli",
-    githubUrl: "https://github.com/fatih/task-cli",
-    featured: true,
-  },
-  {
-    id: 3,
-    title: "Landing Page Evaluasi & Portofolio",
-    description: "Landing page responsif untuk evaluasi dan portofolio pribadi dengan performa tinggi dan desain bersih.",
-    techStack: ["React", "HTML5", "Tailwind CSS"],
-    year: "2023",
-    category: "Online",
-    status: "Production",
-    projectUrl: "https://portofolio.demo.id",
-    githubUrl: "https://github.com/fatih/portofolio",
-    featured: true,
-  },
-];
+export const recentProjects: Project[] = [];
 
 export const biodataFields = [
   { label: "Nama Lengkap", value: profileData.name },

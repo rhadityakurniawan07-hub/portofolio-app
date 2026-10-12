@@ -21,6 +21,9 @@ export const useProfileStore = create<ProfileState>()(
     }),
     {
       name: "portfolio-profile",
+      version: 1,
+      // Buang profil lama (versi 0) dan pakai seed baru.
+      migrate: () => ({ profile: profileData }) as ProfileState,
       // Gabung data lama di localStorage dengan seed baru agar field baru
       // (misal photoUrl) selalu ada walau user pernah buka versi lama.
       merge: (persisted, current) => ({

@@ -30,7 +30,13 @@ export const useProjectsStore = create<ProjectsState>()(
     }),
     {
       name: "portfolio-projects",
-      version: 1,
+      version: 2,
+      // Buang seed lama (id number); proyek buatan user (id string) dipertahankan.
+      migrate: (persisted) => {
+        const p = (persisted ?? {}) as Partial<ProjectsState>;
+        const stored = Array.isArray(p.projects) ? (p.projects as Project[]) : [];
+        return { ...p, projects: stored.filter((x) => typeof x?.id === "string") };
+      },
       // Seed baru (Santri/CLI/Landing) menggantikan seed lama (E-Commerce/Task CLI)
       // yang id-nya number. Proyek buatan user (id string) dipertahankan.
       merge: (persisted, current) => {

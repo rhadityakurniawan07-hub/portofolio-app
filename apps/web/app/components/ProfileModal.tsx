@@ -30,11 +30,13 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
   const handlePhotoFile = async (f: File | undefined) => {
     if (!f) return;
     setPhotoBusy(true);
+    setErrors((prev) => prev.filter((e) => !e.startsWith("Foto:"))); // hapus error foto lama
     try {
       const dataUrl = await downscaleImage(f);
       setForm((prev) => ({ ...prev, photoUrl: dataUrl }));
     } catch (e) {
-      setErrors([e instanceof Error ? e.message : "Gagal membaca foto"]);
+      const msg = e instanceof Error ? e.message : "Gagal membaca foto";
+      setErrors((prev) => [...prev, `Foto: ${msg}`]);
     } finally {
       setPhotoBusy(false);
     }
@@ -110,8 +112,11 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
                 accept="image/*"
                 className="hidden"
                 aria-labelledby="pf-photo-label"
-                onChange={(e) => {
-                  void handlePhotoFile(e.target.files?.[0]);
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    await handlePhotoFile(file);
+                  }
                   e.target.value = "";
                 }}
               />

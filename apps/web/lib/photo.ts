@@ -1,12 +1,28 @@
 "use client";
 
+const IMAGE_EXTS = [".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp"];
+
+/** Beberapa browser HP mengosongkan file.type — kenali lewat ekstensi sebagai cadangan. */
+function looksLikeImage(file: File): boolean {
+  if (file.type.startsWith("image/")) return true;
+  if (file.type === "") {
+    const name = file.name.toLowerCase();
+    return IMAGE_EXTS.some((ext) => name.endsWith(ext));
+  }
+  return false;
+}
+
+function isHeic(file: File): boolean {
+  const name = file.name.toLowerCase();
+  return file.type.includes("heic") || file.type.includes("heif") || name.endsWith(".heic") || name.endsWith(".heif");
+}
 /**
  * Perkecil gambar dari perangkat menjadi dataURL JPEG agar hemat localStorage.
  * Hanya jalan di browser (memakai Image + canvas).
  */
 export function downscaleImage(file: File, maxDim = 512, quality = 0.85): Promise<string> {
   return new Promise((resolve, reject) => {
-    if (!file.type.startsWith("image/")) {
+    if (!looksLikeImage(file)) {
       reject(new Error("File harus berupa gambar (JPG/PNG/WebP)"));
       return;
     }
@@ -30,7 +46,13 @@ export function downscaleImage(file: File, maxDim = 512, quality = 0.85): Promis
     };
     img.onerror = () => {
       URL.revokeObjectURL(url);
-      reject(new Error("File gambar tidak valid"));
+      reject(
+        new Error(
+          isHeic(file)
+            ? "Format HEIC iPhone tidak didukung browser — ubah ke JPG/PNG dulu"
+            : "File gambar tidak valid"
+        )
+      );
     };
     img.src = url;
   });

@@ -11,21 +11,6 @@ export interface Project {
   featured: boolean;
 }
 
-export interface StatData {
-  title: string;
-  value: string;
-  description: string;
-  variant: "primary" | "secondary" | "accent";
-  icon: "Briefcase" | "Code" | "Clock";
-}
-
-export interface BiodataField {
-  label: string;
-  value: string;
-  isBadges?: boolean;
-  badges?: string[];
-}
-
 export const profileData = {
   name: "MUHAMMAD RHADITYA KURNIAWAN",
   role: "Full-Stack Web Developer",
@@ -50,30 +35,6 @@ export const profileData = {
   ],
   languages: ["Indonesia (Native)", "English (Professional)"],
 };
-
-export const statsData: StatData[] = [
-  {
-    title: "Hasil Kerja",
-    value: "15+",
-    description: "Proyek tuntas & terverifikasi",
-    variant: "primary" as const,
-    icon: "Briefcase",
-  },
-  {
-    title: "Fokus Teknis",
-    value: "Web & Backend",
-    description: "Arsitektur sistem & API",
-    variant: "secondary" as const,
-    icon: "Code",
-  },
-  {
-    title: "Status Komitmen",
-    value: "Freelance & Full-Time",
-    description: "Ketersediaan kerja",
-    variant: "accent" as const,
-    icon: "Clock",
-  },
-];
 
 export const recentProjects: Project[] = [];
 

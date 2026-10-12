@@ -2,7 +2,6 @@
 
 import { HeroSection } from "./components/HeroSection";
 import { ProfileCard } from "./components/ProfileCard";
-import { RecentProjects } from "./components/RecentProjects";
 
 export default function Home() {
   return (
@@ -10,7 +9,6 @@ export default function Home() {
       <div className="max-w-5xl mx-auto space-y-16">
         <HeroSection />
         <ProfileCard />
-        <RecentProjects />
       </div>
     </div>
   );

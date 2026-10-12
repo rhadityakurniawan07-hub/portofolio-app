@@ -28,6 +28,22 @@ export const useProjectsStore = create<ProjectsState>()(
         set((s) => ({ projects: s.projects.filter((x) => x.id !== id) })),
       resetProjects: () => set({ projects: recentProjects as Project[] }),
     }),
-    { name: "portfolio-projects" }
+    {
+      name: "portfolio-projects",
+      version: 1,
+      // Seed baru (Santri/CLI/Landing) menggantikan seed lama (E-Commerce/Task CLI)
+      // yang id-nya number. Proyek buatan user (id string) dipertahankan.
+      merge: (persisted, current) => {
+        const cur = current as ProjectsState;
+        const p = (persisted ?? {}) as Partial<ProjectsState>;
+        const stored = Array.isArray(p.projects) ? (p.projects as Project[]) : [];
+        const seed = cur.projects;
+        const seedIds = new Set(seed.map((x) => x.id));
+        const userKept = stored.filter(
+          (x) => typeof x.id === "string" && !seedIds.has(x.id)
+        );
+        return { ...cur, ...p, projects: [...seed, ...userKept] };
+      },
+    }
   )
 );

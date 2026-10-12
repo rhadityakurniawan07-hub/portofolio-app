@@ -60,7 +60,9 @@ export function HeroSection() {
             <span className="relative h-1.5 w-1.5 rounded-full bg-green-500" aria-hidden="true">
               <span className="absolute inset-0 h-1.5 w-1.5 rounded-full bg-green-500 opacity-75 animate-ping" />
             </span>
-            • TERSEDIA UNTUK PROYEK
+            {(profile as { availabilityStatus?: string }).availabilityStatus === "available"
+              ? "• TERSEDIA UNTUK PROYEK"
+              : `• ${(profile.availability.trim() || "TIDAK TERSEDIA").toUpperCase()}`}
           </span>
           <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
             <MapPin className="h-4 w-4" aria-hidden="true" />

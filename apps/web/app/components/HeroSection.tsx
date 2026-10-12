@@ -99,7 +99,7 @@ export function HeroSection() {
           </a>
           <Link
             href="/projects"
-            className="text-sm font-medium text-primary hover:underline"
+            className="rounded-lg border border-gray-700 px-6 py-3 text-sm font-semibold transition-colors hover:bg-gray-800"
           >
             Lihat Portofolio →
           </Link>

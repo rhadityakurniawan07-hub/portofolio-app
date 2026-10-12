@@ -27,7 +27,7 @@ export interface BiodataField {
 }
 
 export const profileData = {
-  name: "Muhammad Fatih Al-Ghazali",
+  name: "MUHAMMAD RHADITYA KURNIAWAN",
   role: "Full-Stack Web Developer",
   bio: "Programmer yang berfokus mengembangkan aplikasi web fungsional, bersih, dan bermanfaat.",
   tagline: "Next.js • Node.js • PostgreSQL • Tailwind CSS",

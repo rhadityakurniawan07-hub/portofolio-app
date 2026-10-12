@@ -16,10 +16,10 @@ Aplikasi web portofolio pribadi berbasis *dark mode* yang dirancang untuk menamp
 ## 3. Spesifikasi Antarmuka & Fitur Utama
 
 ### A. Navigation Header & Footer
-* **Logo & Status Mode:** Brand `fatih .me` di sebelah kiri dengan badge `• MODE PEMILIK AKTIF`[cite: 7, 9].
+* **Logo & Status Mode:** Brand `rhadit .me` di sebelah kiri dengan badge `• MODE PEMILIK AKTIF`[cite: 7, 9].
 * **Tab Navigasi Utama:** Pilihan menu `Data Diri` (aktif) dan `Koleksi Proyek`[cite: 7, 9].
 * **Avatar User:** Ikon profil di sudut kanan atas[cite: 7, 9].
-* **Footer:** Menampilkan label hak cipta `fatih.me © 2025`, badge `ARSIP PRIBADI`, serta peran `Full-Stack Engineer` • `Jakarta, ID`[cite: 7, 9].
+* **Footer:** Menampilkan label hak cipta `rhadit.me © 2025`, badge `ARSIP PRIBADI`, serta peran `Full-Stack Engineer` • `Jakarta, ID`[cite: 7, 9].
 
 ---
 
@@ -27,7 +27,7 @@ Aplikasi web portofolio pribadi berbasis *dark mode* yang dirancang untuk menamp
 1. **Hero Section (Centered Layout):**
    * Foto profil visual melingkar/persegi dengan indikator status aktif[cite: 7].
    * Badge status ketersediaan: `• TERSEDIA UNTUK PROYEK` - `Sleman, D.I. Yogyakarta`[cite: 7].
-   * Display Nama Lengkap: `Muhammad Fatih Al-Ghazali`[cite: 7].
+   * Display Nama Lengkap: `Muhammad Rhaditya Kurniawan`[cite: 7].
    * Sub-title Peran: `Full-Stack Web Developer`[cite: 7].
    * Bio Singkat: *"Programmer yang berfokus mengembangkan aplikasi web fungsional, bersih, dan bermanfaat."*[cite: 7]
    * Tombol Aksi Cepat: `Hubungi Langsung` (CTA Hijau Utama), `WhatsApp`, dan `Lihat Portofolio →`[cite: 7].

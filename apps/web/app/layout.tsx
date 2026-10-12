@@ -17,13 +17,13 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'fatih.me | Full-Stack Web Developer',
-  description: 'Portofolio pribadi Muhammad Fatih Al-Ghazali - Full-Stack Web Developer specializing in Next.js, Node.js, PostgreSQL, dan Tailwind CSS',
+  title: 'rhaditya.me | Full-Stack Web Developer',
+  description: 'Portofolio pribadi MUHAMMAD RHADITYA KURNIAWAN - Full-Stack Web Developer specializing in Next.js, Node.js, PostgreSQL, dan Tailwind CSS',
   keywords: ['Full-Stack Developer', 'Next.js', 'Node.js', 'React', 'TypeScript', 'PostgreSQL', 'Tailwind CSS'],
-  authors: [{ name: 'Muhammad Fatih Al-Ghazali' }],
+  authors: [{ name: 'MUHAMMAD RHADITYA KURNIAWAN' }],
   openGraph: {
-    title: 'fatih.me | Full-Stack Web Developer',
-    description: 'Portofolio pribadi Muhammad Fatih Al-Ghazali',
+    title: 'rhaditya.me | Full-Stack Web Developer',
+    description: 'Portofolio pribadi MUHAMMAD RHADITYA KURNIAWAN',
     type: 'website',
     locale: 'id_ID',
   },

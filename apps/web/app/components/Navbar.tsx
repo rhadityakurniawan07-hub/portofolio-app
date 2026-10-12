@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu, X, User, Briefcase, Settings } from 'lucide-react'
 import { PinPrompt } from './PinPrompt'
+import { BackupButtons } from './BackupButtons'
 import { useOwnerStore } from '@/stores/use-owner'
 
 const navItems = [
@@ -61,6 +62,12 @@ export function Navbar() {
             <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-green-500/20 px-2.5 py-0.5 text-xs font-medium text-green-400 ring-1 ring-green-500/30">
               <Settings className="h-3 w-3" aria-hidden="true" />
               MODE PEMILIK AKTIF
+            </span>
+          )}
+
+          {ownerMode && (
+            <span className="hidden sm:inline-flex">
+              <BackupButtons />
             </span>
           )}
 
@@ -132,6 +139,12 @@ export function Navbar() {
               <Settings className="h-3 w-3" aria-hidden="true" />
               MODE PEMILIK AKTIF
             </span>
+          )}
+
+          {ownerMode && (
+            <div className="px-3 py-1.5">
+              <BackupButtons />
+            </div>
           )}
         </div>
       </div>

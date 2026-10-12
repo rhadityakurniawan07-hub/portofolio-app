@@ -9,6 +9,7 @@ interface ProjectsState {
   addProject: (p: Omit<Project, "id">) => void;
   updateProject: (id: number | string, p: Partial<Project>) => void;
   removeProject: (id: number | string) => void;
+  replaceProjects: (projects: Project[]) => void;
   resetProjects: () => void;
 }
 
@@ -26,6 +27,7 @@ export const useProjectsStore = create<ProjectsState>()(
         })),
       removeProject: (id) =>
         set((s) => ({ projects: s.projects.filter((x) => x.id !== id) })),
+      replaceProjects: (projects) => set({ projects }),
       resetProjects: () => set({ projects: recentProjects as Project[] }),
     }),
     {

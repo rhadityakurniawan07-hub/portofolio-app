@@ -79,7 +79,7 @@ export function HeroSection() {
         <div className="flex flex-wrap items-center justify-center gap-3">
           <button
             onClick={handleCopyEmail}
-            className="flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+            className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
             aria-label={copied ? "Email disalin" : "Hubungi langsung"}
           >
             <Mail className="h-4 w-4" aria-hidden="true" />
@@ -92,14 +92,14 @@ export function HeroSection() {
             href={profile.whatsapp}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 rounded-lg border border-gray-700 px-6 py-3 text-sm font-semibold transition-colors hover:bg-gray-800"
+            className="flex items-center gap-2 rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold transition-colors hover:bg-gray-800"
           >
             <MessageSquare className="h-4 w-4" aria-hidden="true" />
             WhatsApp
           </a>
           <Link
             href="/projects"
-            className="rounded-lg border border-gray-700 px-6 py-3 text-sm font-semibold transition-colors hover:bg-gray-800"
+            className="rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold transition-colors hover:bg-gray-800"
           >
             Lihat Portofolio →
           </Link>

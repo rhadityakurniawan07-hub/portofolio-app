@@ -108,7 +108,7 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
                 (form.name.split(/\s+/).map((w) => w[0]).slice(0, 2).join("") || "FA").toUpperCase()
               )}
             </div>
-            <div className="flex flex-col items-start gap-2">
+            <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-2">
               <input
                 ref={fileRef}
                 type="file"
@@ -127,9 +127,9 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
                 type="button"
                 onClick={() => fileRef.current?.click()}
                 disabled={photoBusy}
-                className="rounded-lg border border-gray-700 px-4 py-2 text-sm font-semibold transition-colors hover:bg-gray-800 disabled:opacity-50"
+                className="rounded-lg border border-gray-700 px-4 py-2 text-sm font-semibold transition-colors hover:bg-gray-800 disabled:opacity-50 whitespace-nowrap"
               >
-                {photoBusy ? "Memproses..." : "Pilih Foto dari Perangkat"}
+                {photoBusy ? "Memproses..." : "Pilih Foto"}
               </button>
               {photoValue && (
                 <button

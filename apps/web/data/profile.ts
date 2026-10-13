@@ -37,12 +37,3 @@ export const profileData = {
 };
 
 export const recentProjects: Project[] = [];
-
-export const biodataFields = [
-  { label: "Nama Lengkap", value: profileData.name },
-  { label: "Peran Utama", value: profileData.role },
-  { label: "Spesialisasi", value: profileData.specializations.join(", "), isBadges: true, badges: profileData.specializations },
-  { label: "Domisili", value: profileData.location },
-  { label: "Ketersediaan", value: profileData.availability },
-  { label: "Penguasaan Bahasa", value: profileData.languages.join(", ") },
-];

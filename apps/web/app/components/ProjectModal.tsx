@@ -2,12 +2,14 @@
 import { useEffect, useState } from "react";
 import { Modal } from "@repo/ui/modal";
 import { useProjectsStore } from "@/stores/use-projects";
+import { useToast } from "@/components/Toast";
 import { parseTechStack, normalizeUrl, validateProjectInput } from "@/lib/portfolio";
 
 export function ProjectModal({ open, onClose, editingId }: { open: boolean; onClose: () => void; editingId?: number | string | null }) {
   const projects = useProjectsStore((s) => s.projects);
   const addProject = useProjectsStore((s) => s.addProject);
   const updateProject = useProjectsStore((s) => s.updateProject);
+  const { showToast } = useToast();
   const editing = editingId != null ? projects.find((p) => p.id === editingId) : undefined;
 
   const [title, setTitle] = useState("");
@@ -37,6 +39,7 @@ export function ProjectModal({ open, onClose, editingId }: { open: boolean; onCl
     }
     if (editing) {
       updateProject(editing.id, { title, description, techStack, year, projectUrl: normalizeUrl(link) });
+      showToast("Proyek berhasil diperbarui", "success");
     } else {
       addProject({
         title,
@@ -49,6 +52,7 @@ export function ProjectModal({ open, onClose, editingId }: { open: boolean; onCl
         githubUrl: "",
         featured: false,
       } as unknown as Parameters<typeof addProject>[0]);
+      showToast("Proyek berhasil disimpan", "success");
     }
     onClose();
   };

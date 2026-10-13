@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { useProjectsStore } from "@/stores/use-projects";
 import { useOwnerStore } from "@/stores/use-owner";
+import { useToast } from "@/components/Toast";
 import { ProjectCard } from "../components/ProjectCard";
 import { ProjectModal } from "../components/ProjectModal";
 import { DeleteConfirm } from "../components/DeleteConfirm";
@@ -11,6 +12,7 @@ export default function ProjectsPage() {
   const projects = useProjectsStore((s) => s.projects);
   const removeProject = useProjectsStore((s) => s.removeProject);
   const ownerMode = useOwnerStore((s) => s.ownerMode);
+  const { showToast } = useToast();
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | string | null>(null);
   const [deleteId, setDeleteId] = useState<number | string | null>(null);
@@ -133,7 +135,10 @@ export default function ProjectsPage() {
         title={deleteTarget?.title ?? ""}
         onCancel={() => setDeleteId(null)}
         onConfirm={() => {
-          if (deleteId != null) removeProject(deleteId);
+          if (deleteId != null) {
+            removeProject(deleteId);
+            showToast("Proyek dihapus", "success");
+          }
           setDeleteId(null);
         }}
       />

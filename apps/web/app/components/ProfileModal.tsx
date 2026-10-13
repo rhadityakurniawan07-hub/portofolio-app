@@ -2,12 +2,14 @@
 import { useEffect, useRef, useState } from "react";
 import { Modal } from "@repo/ui/modal";
 import { useProfileStore } from "@/stores/use-profile";
+import { useToast } from "@/components/Toast";
 import { parseDaftar, normalizeUrl, validateProfileInput, validateProfileUrls, validateOptionalUrl } from "@/lib/portfolio";
 import { downscaleImage } from "@/lib/photo";
 
 export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const profile = useProfileStore((s) => s.profile);
   const updateProfile = useProfileStore((s) => s.updateProfile);
+  const { showToast } = useToast();
   const [form, setForm] = useState(profile);
   const [specInput, setSpecInput] = useState(profile.specializations.join(", "));
   const [langInput, setLangInput] = useState(profile.languages.join(", "));
@@ -69,6 +71,7 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
       photoUrl: photoValue.startsWith("data:") ? photoValue : photoValue ? normalizeUrl(photoValue) : "",
     });
     setErrors([]);
+    showToast("Profil berhasil diperbarui", "success");
     onClose();
   };
 

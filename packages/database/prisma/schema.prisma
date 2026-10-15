@@ -8,17 +8,26 @@ datasource db {
 }
 
 model Profile {
-  id            String   @id @default(cuid())
-  fullName      String
-  role          String
-  tagline       String
-  location      String
-  email         String   @unique
-  availability  String
-  skills        String[]
-  languages     String[]
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id              String   @id @default(cuid())
+  fullName        String
+  role            String
+  tagline         String
+  bio             String
+  location        String
+  email           String   @unique
+  availability    String
+  availabilityStatus String @default("available")
+  phone           String?
+  photoUrl        String?
+  github          String?
+  linkedin        String?
+  twitter         String?
+  whatsapp        String?
+  telegram        String?
+  skills          String[]
+  languages       String[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   @@map("profiles")
 }
@@ -28,9 +37,12 @@ model Project {
   title       String
   description String
   techStack   String[]
-  link        String?
+  projectUrl  String?
+  githubUrl   String?
   year        String
   category    String
+  status      String   @default("Production")
+  featured    Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

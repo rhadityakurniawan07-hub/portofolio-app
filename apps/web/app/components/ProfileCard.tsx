@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Copy, Check, Github, Send } from "lucide-react";
+import { Copy, Check, Github, Send, Mail } from "lucide-react";
 import { useProfileStore } from "@/stores/use-profile";
 import { useOwnerStore } from "@/stores/use-owner";
 import { ProfileModal } from "./ProfileModal";
@@ -92,14 +92,21 @@ export function ProfileCard() {
           </div>
           <div className="flex flex-col gap-1 py-4 sm:flex-row sm:gap-4">
             <dt className="text-sm font-medium text-muted-foreground sm:w-40">Kanal & Repositori</dt>
-            <dd className="flex items-center gap-4 text-sm sm:flex-1">
+<dd className="flex items-center gap-4 text-sm sm:flex-1">
               <a
                 href={profile.github}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 font-medium text-primary hover:underline"
               >
-                &lt;&gt; GitHub
+                GitHub
+              </a>
+              <a
+                href="/contact"
+                className="inline-flex items-center gap-1.5 font-medium text-primary hover:underline"
+              >
+                <Mail className="h-4 w-4" aria-hidden="true" />
+                Hubungi
               </a>
               <a
                 href={profile.telegram}

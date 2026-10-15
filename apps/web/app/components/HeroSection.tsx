@@ -79,11 +79,11 @@ export function HeroSection() {
         <div className="flex flex-wrap items-center justify-center gap-3">
           <button
             onClick={handleCopyEmail}
-            className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
-            aria-label={copied ? "Email disalin" : "Hubungi langsung"}
+            className="inline-flex items-center gap-2 rounded-md bg-gray-900 text-white px-5 py-3 text-sm font-medium uppercase tracking-wider transition-colors hover:bg-gray-800 focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-[#0F172A]"
+            aria-label={copied ? "Email disalin" : "Salin email"}
           >
             <Mail className="h-4 w-4" aria-hidden="true" />
-            {copied ? "Disalin!" : "Hubungi Langsung"}
+            {copied ? "Disalin!" : "Salin Email"}
             <span role="status" className="sr-only">
               {copied ? "Email disalin" : ""}
             </span>
@@ -92,11 +92,17 @@ export function HeroSection() {
             href={profile.whatsapp}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold transition-colors hover:bg-gray-800"
+            className="inline-flex items-center gap-2 rounded-md border border-gray-700 bg-transparent px-5 py-3 text-sm font-medium uppercase tracking-wider text-foreground transition-colors hover:bg-gray-800 focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-[#0F172A]"
           >
             <MessageSquare className="h-4 w-4" aria-hidden="true" />
             WhatsApp
           </a>
+          <Link
+            href="/contact"
+            className="inline-flex items-center gap-2 rounded-md border border-gray-700 bg-transparent px-5 py-3 text-sm font-medium uppercase tracking-wider text-foreground transition-colors hover:bg-gray-800 focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-[#0F172A]"
+          >
+            Hubungi Saya
+          </Link>
           <Link
             href="/projects"
             className="rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold transition-colors hover:bg-gray-800"

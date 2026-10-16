@@ -6,14 +6,14 @@ export function DeleteConfirm({ open, title, onCancel, onConfirm }: { open: bool
     <Modal
       open={open}
       onClose={onCancel}
-      title="Hapus Proyek"
+      title="HAPUS PROYEK"
       footer={
         <>
-          <button onClick={onCancel} className="rounded-lg border border-gray-700 px-4 py-2 text-sm font-semibold hover:bg-gray-800">
-            Batal
+          <button onClick={onCancel} className="btn-ghost">
+            BATAL
           </button>
-          <button onClick={onConfirm} className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-500">
-            Hapus
+          <button onClick={onConfirm} className="btn-danger">
+            HAPUS
           </button>
         </>
       }

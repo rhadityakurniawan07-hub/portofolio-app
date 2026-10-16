@@ -58,13 +58,13 @@ function ToastItem({ toast, onClose }: { toast: Toast; onClose: (id: string) => 
   const colors = {
     success: "border-green-500/30 bg-green-950/90 text-green-400",
     error: "border-red-500/30 bg-red-950/90 text-red-400",
-    info: "border-blue-500/30 bg-blue-950/90 text-blue-400",
+    info: "border-red-600/30 bg-red-950/90 text-red-400",
   };
   const Icon = icons[toast.type];
 
   return (
     <div
-      className={`pointer-events-auto flex items-center gap-3 rounded-lg border px-4 py-3 text-sm font-medium shadow-2xl min-w-[280px] max-w-[400px] animate-slide-in ${colors[toast.type]}`}
+      className={`pointer-events-auto flex items-center gap-3 rounded-md border px-4 py-3 text-sm font-medium shadow-2xl min-w-[280px] max-w-[400px] animate-slide-in ${colors[toast.type]}`}
       role="status"
       aria-live="polite"
     >

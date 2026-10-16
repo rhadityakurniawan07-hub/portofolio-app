@@ -2,10 +2,17 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Copy, Check, Github, Send, Mail } from "lucide-react";
+import { Copy, Check, Github, Send, Mail, MessageSquare } from "lucide-react";
 import { useProfileStore } from "@/stores/use-profile";
 import { useOwnerStore } from "@/stores/use-owner";
 import { ProfileModal } from "./ProfileModal";
+
+const iconMap = {
+  github: Github,
+  send: Send,
+  mail: Mail,
+  messageSquare: MessageSquare,
+} as const;
 
 export function ProfileCard() {
   const profile = useProfileStore((s) => s.profile);
@@ -23,111 +30,111 @@ export function ProfileCard() {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const infoRows = [
+    { label: "NAMA LENGKAP", value: profile.name },
+    { label: "PERAN UTAMA", value: profile.role },
+    { label: "SPESIALISASI", badges: profile.specializations },
+    { label: "DOMISILI", value: profile.location },
+    { label: "KETERSEDIAAN", value: profile.availability },
+    { label: "EMAIL RESMI", value: profile.email, copyable: true },
+    { label: "KANAL & REPOSITORI", links: [
+      { label: "GitHub", href: profile.github, icon: "github" as const },
+      { label: "Telegram", href: profile.telegram, icon: "send" as const },
+      { label: "WhatsApp", href: profile.whatsapp, icon: "mail" as const },
+    ]},
+  ];
+
   return (
     <section aria-labelledby="profil-heading">
-      <div className="overflow-hidden rounded-xl border border-gray-800 bg-gray-900/50">
-        <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
-          <h2 id="profil-heading" className="text-lg font-bold tracking-tight">
-            • Informasi Profil
+      <div className="editorial-card">
+        <div className="editorial-card-header">
+          <h2 id="profil-heading" className="editorial-card-title">
+            • INFORMASI PROFIL
           </h2>
           {ownerMode && (
             <button
               onClick={() => setModalOpen(true)}
-              className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+              className="btn-primary"
             >
-              Ubah Data
+              UBAH DATA
             </button>
           )}
         </div>
 
-        <dl className="divide-y divide-gray-800 px-6">
-          <div className="flex flex-col gap-1 py-4 sm:flex-row sm:gap-4">
-            <dt className="text-sm font-medium text-muted-foreground sm:w-40">Nama Lengkap</dt>
-            <dd className="text-sm text-foreground sm:flex-1">{profile.name}</dd>
-          </div>
-          <div className="flex flex-col gap-1 py-4 sm:flex-row sm:gap-4">
-            <dt className="text-sm font-medium text-muted-foreground sm:w-40">Peran Utama</dt>
-            <dd className="text-sm text-foreground sm:flex-1">{profile.role}</dd>
-          </div>
-          <div className="flex flex-col gap-1 py-4 sm:flex-row sm:gap-4">
-            <dt className="text-sm font-medium text-muted-foreground sm:w-40">Spesialisasi</dt>
-            <dd className="flex flex-wrap gap-1.5 sm:flex-1">
-              {profile.specializations.map((badge: string) => (
-                <span
-                  key={badge}
-                  className="inline-flex items-center rounded-full border border-gray-700 bg-gray-800/50 px-2.5 py-0.5 text-xs font-medium text-gray-300"
+        <table className="w-full border-collapse" aria-labelledby="profil-heading">
+          <tbody>
+            {infoRows.map((row, index) => (
+              <tr key={row.label} className={index > 0 ? 'border-t border-gray-800' : ''}>
+                <th
+                  scope="row"
+                  className="w-40 py-4 pr-4 font-mono text-xs uppercase tracking-wider text-muted-foreground font-medium"
                 >
-                  {badge}
-                </span>
-              ))}
-            </dd>
-          </div>
-          <div className="flex flex-col gap-1 py-4 sm:flex-row sm:gap-4">
-            <dt className="text-sm font-medium text-muted-foreground sm:w-40">Domisili</dt>
-            <dd className="text-sm text-foreground sm:flex-1">{profile.location}</dd>
-          </div>
-          <div className="flex flex-col gap-1 py-4 sm:flex-row sm:gap-4">
-            <dt className="text-sm font-medium text-muted-foreground sm:w-40">Ketersediaan</dt>
-            <dd className="text-sm text-foreground sm:flex-1">• {profile.availability}</dd>
-          </div>
-          <div className="flex flex-col gap-1 py-4 sm:flex-row sm:gap-4">
-            <dt className="text-sm font-medium text-muted-foreground sm:w-40">Email Resmi</dt>
-            <dd className="flex items-center gap-2 text-sm text-foreground sm:flex-1">
-              {profile.email}
-              <button
-                onClick={handleCopyEmail}
-                className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-white/5 hover:text-foreground"
-                aria-label={copied ? "Email disalin" : "Salin email"}
-              >
-                {copied ? (
-                  <Check className="h-4 w-4 text-green-500" aria-hidden="true" />
+                  {row.label}
+                </th>
+                <td className="py-4">
+                  {row.badges ? (
+                    <div className="flex flex-wrap gap-1.5">
+                      {row.badges.map((badge: string) => (
+                        <span
+                          key={badge}
+                          className="badge-pill"
+                        >
+                          {badge}
+                        </span>
+                      ))}
+                  </div>
+                ) : row.links ? (
+                  <div className="flex flex-wrap items-center gap-3">
+                    {row.links.map((link) => {
+                      const Icon = iconMap[link.icon];
+                      return (
+                        <a
+                          key={link.label}
+                          href={link.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 font-medium text-primary hover:underline"
+                        >
+                          <Icon className="h-4 w-4" aria-hidden="true" />
+                          {link.label}
+                        </a>
+                      );
+                    })}
+                  </div>
+                ) : row.copyable ? (
+                  <div className="flex items-center gap-2">
+                    <span className="text-foreground">{row.value}</span>
+                    <button
+                      onClick={handleCopyEmail}
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-md text-gray-400 transition-colors hover:bg-white/5 hover:text-foreground focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-black"
+                      aria-label={copied ? "Email disalin" : "Salin email"}
+                    >
+                      {copied ? (
+                        <Check className="h-4 w-4 text-green-500" aria-hidden="true" />
+                      ) : (
+                        <Copy className="h-4 w-4" aria-hidden="true" />
+                      )}
+                    </button>
+                    <span role="status" className="sr-only">
+                      {copied ? "Email disalin" : ""}
+                    </span>
+                  </div>
                 ) : (
-                  <Copy className="h-4 w-4" aria-hidden="true" />
+                  <span className="text-foreground">{row.value}</span>
                 )}
-              </button>
-              <span role="status" className="sr-only">
-                {copied ? "Email disalin" : ""}
-              </span>
-            </dd>
-          </div>
-          <div className="flex flex-col gap-1 py-4 sm:flex-row sm:gap-4">
-            <dt className="text-sm font-medium text-muted-foreground sm:w-40">Kanal & Repositori</dt>
-<dd className="flex items-center gap-4 text-sm sm:flex-1">
-              <a
-                href={profile.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 font-medium text-primary hover:underline"
-              >
-                GitHub
-              </a>
-              <a
-                href="/contact"
-                className="inline-flex items-center gap-1.5 font-medium text-primary hover:underline"
-              >
-                <Mail className="h-4 w-4" aria-hidden="true" />
-                Hubungi
-              </a>
-              <a
-                href={profile.telegram}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 font-medium text-primary hover:underline"
-              >
-                <Send className="h-4 w-4" aria-hidden="true" />
-                Telegram
-              </a>
-            </dd>
-          </div>
-        </dl>
+              </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
 
-        <div className="flex flex-col items-center justify-between gap-3 border-t border-gray-800 px-6 py-4 sm:flex-row">
+        <div className="editorial-divider px-6 py-4 flex flex-col items-center justify-between gap-3 sm:flex-row">
           <p className="text-sm text-muted-foreground">Ingin melihat hasil pengerjaan proyek?</p>
           <Link
             href="/projects"
-            className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+            className="btn-primary"
           >
-            Buka Koleksi Proyek →
+            BUKA KOLEKSI PROYEK
           </Link>
         </div>
       </div>
@@ -135,7 +142,7 @@ export function ProfileCard() {
       {copied && (
         <div
           role="status"
-          className="fixed bottom-6 left-1/2 z-[100] -translate-x-1/2 rounded-lg border border-green-500/30 bg-gray-950 px-4 py-2 text-sm font-medium text-green-400 shadow-2xl"
+          className="fixed bottom-6 left-1/2 z-[100] -translate-x-1/2 rounded-md border border-green-500/30 bg-gray-950 px-4 py-2 text-sm font-medium text-green-400 shadow-2xl animate-slide-in"
         >
           Email disalin ke clipboard
         </div>

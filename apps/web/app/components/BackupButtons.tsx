@@ -49,22 +49,22 @@ export function BackupButtons() {
 
   return (
     <>
-      <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-2">
         <button
           onClick={handleExport}
-          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors hover:bg-gray-800"
+          className="inline-flex items-center gap-2 rounded-md border border-gray-700 bg-transparent px-3 py-1.5 text-sm font-medium uppercase tracking-wider text-foreground transition-colors hover:bg-gray-800 focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-[#0F172A]"
           aria-label="Export backup JSON"
         >
           <Download className="h-4 w-4" aria-hidden="true" />
-          <span className="hidden sm:inline">Backup</span>
+          <span className="hidden sm:inline">BACKUP</span>
         </button>
         <button
           onClick={() => fileRef.current?.click()}
-          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors hover:bg-gray-800"
+          className="inline-flex items-center gap-2 rounded-md border border-gray-700 bg-transparent px-3 py-1.5 text-sm font-medium uppercase tracking-wider text-foreground transition-colors hover:bg-gray-800 focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-[#0F172A]"
           aria-label="Import backup JSON"
         >
           <Upload className="h-4 w-4" aria-hidden="true" />
-          <span className="hidden sm:inline">Restore</span>
+          <span className="hidden sm:inline">RESTORE</span>
         </button>
         <input
           ref={fileRef}
@@ -79,7 +79,7 @@ export function BackupButtons() {
         />
       </div>
       {(error || done) && (
-        <span role="status" className={`text-xs font-medium ${error ? "text-red-400" : "text-green-400"}`}>
+        <span role="status" className={`text-xs font-mono font-medium ${error ? "text-red-400" : "text-green-400"}`}>
           {error ?? done}
         </span>
       )}

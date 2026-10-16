@@ -31,14 +31,14 @@ export function ProjectModal({ open, onClose, editingId }: { open: boolean; onCl
   }, [open, editing?.title, editing?.description, editing?.techStack, editing?.projectUrl, editing?.year]);
 
   const save = () => {
-    const techStack = parseTechStack(tech);
+    const techStack = tech.split(",").map(t => t.trim()).filter(Boolean);
     const errs = validateProjectInput({ title, description, techStack, year, link });
     if (errs.length > 0) {
       setErrors(errs);
       return;
     }
     if (editing) {
-      updateProject(editing.id, { title, description, techStack, year, projectUrl: normalizeUrl(link) });
+      updateProject(editing.id, { title, description, techStack, year, projectUrl: link });
       showToast("Proyek berhasil diperbarui", "success");
     } else {
       addProject({
@@ -48,7 +48,7 @@ export function ProjectModal({ open, onClose, editingId }: { open: boolean; onCl
         year,
         category: "Online",
         status: "Production",
-        projectUrl: normalizeUrl(link),
+        projectUrl: link,
         githubUrl: "",
         featured: false,
       } as unknown as Parameters<typeof addProject>[0]);
@@ -57,48 +57,48 @@ export function ProjectModal({ open, onClose, editingId }: { open: boolean; onCl
     onClose();
   };
 
-  const field = "w-full rounded-lg border border-gray-700 bg-gray-900/50 px-3 py-2.5 text-sm focus:border-primary focus:outline-none";
+  const field = "w-full rounded-md border border-gray-700 bg-gray-900/50 px-3 py-2.5 text-sm focus:border-red-600 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-black";
 
   return (
     <Modal
       open={open}
       onClose={onClose}
-      title={editing ? "Ubah Proyek" : "Simpan Proyek Baru"}
+      title={editing ? "UBAH PROYEK" : "SIMPAN PROYEK BARU"}
       footer={
         <>
-          <button onClick={onClose} className="rounded-lg border border-gray-700 px-4 py-2 text-sm font-semibold hover:bg-gray-800">
-            Batal
+          <button onClick={onClose} className="btn-ghost">
+            BATAL
           </button>
-          <button onClick={save} className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90">
-            {editing ? "Simpan Perubahan" : "Simpan ke Koleksi Proyek"}
+          <button onClick={save} className="btn-primary">
+            {editing ? "SIMPAN PERUBAHAN" : "SIMPAN KE KOLEKSI PROYEK"}
           </button>
         </>
       }
     >
       <div className="space-y-4">
-        <p className="text-sm text-muted-foreground">
+        <p className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-4">
           Lengkapi parameter repositori atau aplikasi yang telah Anda selesaikan untuk disimpan ke arsip karya pribadi.
         </p>
         <div>
-          <label className="text-sm font-medium" htmlFor="pj-title">NAMA PROYEK *</label>
+          <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-1 block" htmlFor="pj-title">NAMA PROYEK *</label>
           <input id="pj-title" className={field} value={title} onChange={(e) => setTitle(e.target.value)} />
         </div>
         <div>
-          <label className="text-sm font-medium" htmlFor="pj-desc">DESKRIPSI SINGKAT PROYEK *</label>
+          <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-1 block" htmlFor="pj-desc">DESKRIPSI SINGKAT PROYEK *</label>
           <textarea id="pj-desc" rows={3} className={field} value={description} onChange={(e) => setDescription(e.target.value)} />
         </div>
         <div>
-          <label className="text-sm font-medium" htmlFor="pj-tech">TEKNOLOGI / BAHASA PEMROGRAMAN *</label>
+          <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-1 block" htmlFor="pj-tech">TEKNOLOGI / BAHASA PEMROGRAMAN *</label>
           <input id="pj-tech" className={field} value={tech} onChange={(e) => setTech(e.target.value)} placeholder="Next.js, Node.js" aria-describedby="pj-tech-help" />
           <p id="pj-tech-help" className="mt-1 text-xs text-muted-foreground">Pisahkan dengan koma (,)</p>
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className="text-sm font-medium" htmlFor="pj-link">TAUTAN WEB / LINK PROYEK</label>
+            <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-1 block" htmlFor="pj-link">TAUTAN WEB / LINK PROYEK</label>
             <input id="pj-link" className={field} value={link} onChange={(e) => setLink(e.target.value)} placeholder="https://..." />
           </div>
           <div>
-            <label className="text-sm font-medium" htmlFor="pj-year">TANGGAL / TAHUN PEMBUATAN *</label>
+            <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-1 block" htmlFor="pj-year">TANGGAL / TAHUN PEMBUATAN *</label>
             <input id="pj-year" className={field} value={year} onChange={(e) => setYear(e.target.value)} placeholder="2024" />
           </div>
         </div>

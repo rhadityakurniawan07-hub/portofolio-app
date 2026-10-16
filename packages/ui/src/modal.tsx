@@ -91,20 +91,20 @@ export function Modal({ open, onClose, title, children, footer }: ModalProps) {
       <div className="absolute inset-0 bg-black/70" aria-hidden="true" />
       <div
         ref={dialogRef}
-        className="relative w-full max-w-lg rounded-xl border border-gray-800 bg-gray-950 p-6 shadow-2xl"
+        className="relative w-full max-w-lg rounded-lg border border-gray-800 bg-gray-950 p-6 shadow-2xl"
         tabIndex={-1}
       >
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-bold text-foreground">{title}</h2>
+          <h2 className="font-mono text-xs uppercase tracking-wider text-foreground">{title}</h2>
           <button
             onClick={onClose}
-            className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-800 hover:text-foreground focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-[#0F172A]"
+            className="rounded-md p-1.5 text-gray-400 hover:bg-gray-800 hover:text-foreground focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-black"
             aria-label="Tutup dialog"
           >
             ✕
           </button>
         </div>
-        <div tabIndex={0} ref={(el) => { firstFocusableRef.current = el as HTMLElement; }}>
+        <div ref={firstFocusableRef as unknown as React.RefObject<HTMLDivElement>} tabIndex={-1}>
           {children}
         </div>
         {footer && <div className="mt-6 flex justify-end gap-3">{footer}</div>}

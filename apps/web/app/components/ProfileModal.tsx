@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useRef, useState } from "react";
 import { Modal } from "@repo/ui/modal";
 import { useProfileStore } from "@/stores/use-profile";
@@ -13,6 +14,7 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
   const [form, setForm] = useState(profile);
   const [specInput, setSpecInput] = useState(profile.specializations.join(", "));
   const [langInput, setLangInput] = useState(profile.languages.join(", "));
+  const [longBioInput, setLongBioInput] = useState(profile.longBio || "");
   const [photoBusy, setPhotoBusy] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -75,46 +77,45 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
     onClose();
   };
 
-  const field = "w-full rounded-lg border border-gray-700 bg-gray-900/50 px-3 py-2.5 text-sm focus:border-primary focus:outline-none";
+  const field = "w-full rounded-md border border-gray-700 bg-gray-900/50 px-3 py-2.5 text-sm focus:border-red-600 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-black";
 
   return (
     <Modal
       open={open}
       onClose={onClose}
-      title="Ubah Informasi Diri"
+      title="UBAH INFORMASI DIRI"
       footer={
         <>
-          <button onClick={onClose} className="rounded-lg border border-gray-700 px-4 py-2 text-sm font-semibold hover:bg-gray-800">
-            Batal
+          <button onClick={onClose} className="btn-ghost">
+            BATAL
           </button>
-          <button onClick={save} className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90">
-            Simpan Perubahan
+          <button onClick={save} className="btn-primary">
+            SIMPAN PERUBAHAN
           </button>
         </>
       }
     >
       <div className="max-h-[70vh] space-y-4 overflow-y-auto pr-1 text-left">
-        <p className="text-sm text-muted-foreground">
+        <p className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-4">
           Perbarui nama, deskripsi singkat, dan detail kontak di bawah secara langsung.
         </p>
-        <div>
-          <span className="text-sm font-medium" id="pf-photo-label">Foto Profil</span>
+<div>
+          <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-1 block" htmlFor="pf-photo">FOTO PROFIL</label>
           <div className="mt-2 flex items-center gap-4">
-            <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-full border border-gray-700 bg-gray-900 text-xl font-bold text-primary/30" aria-hidden="true">
+            <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-md border border-gray-700 bg-gray-900 text-xl font-bold text-primary/30" aria-hidden="true">
               {photoValue ? (
-                // eslint-disable-next-line @next/next/no-img-element
                 <img src={photoValue} alt="" className="h-full w-full object-cover" />
               ) : (
                 (form.name.split(/\s+/).map((w) => w[0]).slice(0, 2).join("") || "FA").toUpperCase()
               )}
             </div>
-            <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-2">
+            <div className="relative flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-2">
               <input
                 ref={fileRef}
+                id="pf-photo"
                 type="file"
                 accept="image/*"
-                className="hidden"
-                aria-labelledby="pf-photo-label"
+                className="absolute w-px h-px p-0 -m-px overflow-hidden opacity-0"
                 onChange={async (e) => {
                   const file = e.target.files?.[0];
                   if (file) {
@@ -127,7 +128,7 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
                 type="button"
                 onClick={() => fileRef.current?.click()}
                 disabled={photoBusy}
-                className="rounded-lg border border-gray-700 px-4 py-2 text-sm font-semibold transition-colors hover:bg-gray-800 disabled:opacity-50 whitespace-nowrap"
+                className="inline-flex items-center gap-2 rounded-md border border-gray-700 bg-transparent px-4 py-2 text-sm font-medium uppercase tracking-wider text-foreground transition-colors hover:bg-gray-800 disabled:opacity-50 whitespace-nowrap focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-black"
               >
                 {photoBusy ? "Memproses..." : "Pilih Foto"}
               </button>
@@ -135,44 +136,49 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
                 <button
                   type="button"
                   onClick={() => setForm({ ...form, photoUrl: "" })}
-                  className="text-xs font-medium text-muted-foreground hover:text-red-400"
+                  className="text-xs font-medium text-muted-foreground hover:text-red-400 transition-colors"
                 >
                   Hapus foto (kembali ke inisial)
                 </button>
               )}
             </div>
+            <p className="mt-1 text-xs text-muted-foreground">JPG/PNG dari perangkat — otomatis diperkecil agar hemat penyimpanan</p>
           </div>
-          <p className="mt-1 text-xs text-muted-foreground">JPG/PNG dari perangkat — otomatis diperkecil agar hemat penyimpanan</p>
         </div>
         <div>
-          <label className="text-sm font-medium" htmlFor="pf-name">Nama Lengkap</label>
+          <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-1 block" htmlFor="pf-name">NAMA LENGKAP</label>
           <input id="pf-name" className={field} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
         </div>
         <div>
-          <label className="text-sm font-medium" htmlFor="pf-role">Peran Utama</label>
+          <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-1 block" htmlFor="pf-role">PERAN UTAMA</label>
           <input id="pf-role" className={field} value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} />
         </div>
         <div>
-          <label className="text-sm font-medium" htmlFor="pf-bio">Tagline / Bio Singkat</label>
+          <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-1 block" htmlFor="pf-bio">TAGLINE / BIO SINGKAT</label>
           <textarea id="pf-bio" rows={3} className={field} value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} />
+        </div>
+        <div>
+          <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-1 block" htmlFor="pf-longbio">TENTANG SAYA (BIO PANJANG)</label>
+          <textarea id="pf-longbio" rows={6} className={field} value={form.longBio} onChange={(e) => setForm({ ...form, longBio: e.target.value })} placeholder="Ceritakan tentang diri Anda, pengalaman, keahlian, dll..." />
+          <p className="mt-1 text-xs text-muted-foreground">Bio panjang untuk section 'Tentang Saya'</p>
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className="text-sm font-medium" htmlFor="pf-loc">Domisili</label>
+            <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-1 block" htmlFor="pf-loc">DOMISILI</label>
             <input id="pf-loc" className={field} value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} />
           </div>
           <div>
-            <label className="text-sm font-medium" htmlFor="pf-email">Surel / Email</label>
+            <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-1 block" htmlFor="pf-email">SUREL / EMAIL</label>
             <input id="pf-email" className={field} value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
           </div>
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className="text-sm font-medium" htmlFor="pf-avail">Status Ketersediaan</label>
+            <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-1 block" htmlFor="pf-avail">STATUS KETERSEDIAAN</label>
             <input id="pf-avail" className={field} value={form.availability} onChange={(e) => setForm({ ...form, availability: e.target.value })} />
           </div>
           <div>
-            <label className="text-sm font-medium" htmlFor="pf-status">Status Aktif</label>
+            <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-1 block" htmlFor="pf-status">STATUS AKTIF</label>
             <select
               id="pf-status"
               className={field}
@@ -185,7 +191,7 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
           </div>
         </div>
         <div>
-          <label className="text-sm font-medium" htmlFor="pf-spec">Spesialisasi</label>
+          <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-1 block" htmlFor="pf-spec">SPESIALISASI</label>
           <input
             id="pf-spec"
             className={field}
@@ -197,7 +203,7 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
           <p id="pf-spec-help" className="mt-1 text-xs text-muted-foreground">Pisahkan dengan koma (,)</p>
         </div>
         <div>
-          <label className="text-sm font-medium" htmlFor="pf-lang">Penguasaan Bahasa</label>
+          <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-1 block" htmlFor="pf-lang">PENGUASAAN BAHASA</label>
           <input
             id="pf-lang"
             className={field}
@@ -209,16 +215,16 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
           <p id="pf-lang-help" className="mt-1 text-xs text-muted-foreground">Pisahkan dengan koma (,)</p>
         </div>
         <div>
-          <label className="text-sm font-medium" htmlFor="pf-github">GitHub</label>
+          <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-1 block" htmlFor="pf-github">GITHUB</label>
           <input id="pf-github" className={field} value={form.github} onChange={(e) => setForm({ ...form, github: e.target.value })} placeholder="https://github.com/..." />
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className="text-sm font-medium" htmlFor="pf-telegram">Telegram</label>
+            <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-1 block" htmlFor="pf-telegram">TELEGRAM</label>
             <input id="pf-telegram" className={field} value={form.telegram} onChange={(e) => setForm({ ...form, telegram: e.target.value })} placeholder="https://t.me/..." />
           </div>
           <div>
-            <label className="text-sm font-medium" htmlFor="pf-wa">WhatsApp</label>
+            <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-1 block" htmlFor="pf-wa">WHATSAPP</label>
             <input id="pf-wa" className={field} value={form.whatsapp} onChange={(e) => setForm({ ...form, whatsapp: e.target.value })} placeholder="https://wa.me/..." />
           </div>
         </div>

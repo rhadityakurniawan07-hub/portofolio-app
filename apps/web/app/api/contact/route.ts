@@ -64,15 +64,55 @@ export async function POST(req: NextRequest) {
 
     const { name, email, subject, message } = parsed.data;
 
-    // TODO: Integrate with email service (Resend, Nodemailer, EmailJS, etc.)
-    // For now, log the contact form submission
-    console.log("[CONTACT] New submission:", { name, email, subject, message });
+    const resendApiKey = process.env.RESEND_API_KEY;
+    const contactTo = process.env.CONTACT_TO_EMAIL;
+    const contactFrom =
+      process.env.CONTACT_FROM_EMAIL ?? "Portofolio <onboarding@resend.dev>";
 
-    // Simulate email sending delay
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    // Tanpa API key: mode dev — catat log saja agar form tetap bisa dicoba lokal.
+    if (!resendApiKey || !contactTo) {
+      console.log("[CONTACT] (dev fallback, tanpa RESEND_API_KEY) Pesan baru:", {
+        name,
+        email,
+        subject,
+        message,
+      });
+      return NextResponse.json(
+        {
+          success: true,
+          delivered: false,
+          message: "Pesan tercatat (mode dev — atur RESEND_API_KEY agar terkirim via email).",
+        },
+        { status: 200 }
+      );
+    }
+
+    const resendRes = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${resendApiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: contactFrom,
+        to: [contactTo],
+        replyTo: email,
+        subject: `[Portofolio] ${subject} — dari ${name}`,
+        text: `Nama: ${name}\nEmail: ${email}\n\n${message}`,
+      }),
+    });
+
+    if (!resendRes.ok) {
+      const detail = await resendRes.text().catch(() => "");
+      console.error("[API] Resend gagal:", resendRes.status, detail);
+      return NextResponse.json(
+        { error: "Gagal mengirim email. Coba lagi nanti." },
+        { status: 502 }
+      );
+    }
 
     return NextResponse.json(
-      { success: true, message: "Pesan terkirim. Kami akan membalas segera." },
+      { success: true, delivered: true, message: "Pesan terkirim. Kami akan membalas segera." },
       { status: 200 }
     );
   } catch (error) {

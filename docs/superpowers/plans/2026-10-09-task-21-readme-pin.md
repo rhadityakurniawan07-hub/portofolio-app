@@ -1,7 +1,7 @@
 # Task 21: README + PIN Production
 
 > Sumber: saran audit — README masih template Turborepo; PIN default `1234` tidak aman untuk production.
-> Status: BELUM dikerjakan.
+> Status: SELESAI.
 
 **Tech Stack:** Markdown, Next.js env.
 

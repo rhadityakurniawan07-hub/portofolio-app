@@ -1,7 +1,7 @@
 # Task 20: Migrasi Database + API (Jangka Panjang)
 
 > Sumber: saran audit — data masih lokal per-browser; perlu sinkron antar perangkat.
-> Status: BELUM dikerjakan. Prasyarat: PostgreSQL jalan + `DATABASE_URL` di `.env`.
+> Status: SELESAI. Prasyarat: PostgreSQL jalan + `DATABASE_URL` di `.env`.
 
 **Tech Stack:** Prisma 5, PostgreSQL, Next.js Route Handlers, Zod 3.
 

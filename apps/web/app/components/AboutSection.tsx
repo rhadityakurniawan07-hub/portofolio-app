@@ -1,11 +1,16 @@
 "use client";
 
-import Link from "next/link";
-import { Code, Database, Globe, Layers, Terminal, Download, Briefcase } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useProfileStore } from "@/stores/use-profile";
 
 export function AboutSection() {
   const profile = useProfileStore((s) => s.profile);
+  const [imgError, setImgError] = useState(false);
+  const showPhoto = Boolean(profile.photoUrl) && !imgError;
+
+  useEffect(() => {
+    setImgError(false);
+  }, [profile.photoUrl]);
 
   return (
     <section className="editorial-section" aria-labelledby="about-heading">
@@ -17,9 +22,18 @@ export function AboutSection() {
               <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-red-600/20 to-red-600/5 blur-2xl" />
               <div className="relative aspect-square rounded-xl border-2 border-red-600/50 bg-gray-900 overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-red-600/10 to-transparent" />
-                <div className="absolute inset-0 flex items-center justify-center text-7xl font-bold text-red-600/20 uppercase font-mono">
-                  {(profile.name.split(/\s+/).map((w) => w[0]).slice(0, 2).join("") || "FA").toUpperCase()}
-                </div>
+                {showPhoto ? (
+                  <img
+                    src={profile.photoUrl}
+                    alt={`Foto ${profile.name}`}
+                    className="absolute inset-0 h-full w-full object-cover"
+                    onError={() => setImgError(true)}
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center text-7xl font-bold text-red-600/20 uppercase font-mono">
+                    {(profile.name.split(/\s+/).map((w) => w[0]).slice(0, 2).join("") || "FA").toUpperCase()}
+                  </div>
+                )}
               </div>
             </div>
           </div>

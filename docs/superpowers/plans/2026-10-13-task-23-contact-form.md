@@ -1,7 +1,7 @@
 # Task 23: Contact Form
 
 > Sumber: saran pengembangan — form kontak nyata menggantikan mailto/link WhatsApp.
-> Status: BELUM dikerjakan.
+> Status: SELESAI.
 
 **Tech Stack:** Next.js 16 App Router, React 19, Tailwind 3 dark-mode `#0F172A`, React Hook Form (opsional, bisa pakai state manual), validasi Zod (opsional).
 

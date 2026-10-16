@@ -41,6 +41,7 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Gagal membaca foto";
       setErrors((prev) => [...prev, `Foto: ${msg}`]);
+      showToast(`Foto: ${msg}`, "error");
     } finally {
       setPhotoBusy(false);
     }
@@ -109,13 +110,22 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
                 (form.name.split(/\s+/).map((w) => w[0]).slice(0, 2).join("") || "FA").toUpperCase()
               )}
             </div>
-            <div className="relative flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-2">
+            <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-2">
+              <label
+                htmlFor="pf-photo"
+                className={`inline-flex cursor-pointer items-center gap-2 rounded-md border border-gray-700 bg-transparent px-4 py-2 text-sm font-medium uppercase tracking-wider text-foreground transition-colors hover:bg-gray-800 focus-within:ring-2 focus-within:ring-red-600 focus-within:ring-offset-2 focus-within:ring-offset-black ${
+                  photoBusy ? "pointer-events-none opacity-50" : ""
+                }`}
+              >
+                {photoBusy ? "Memproses..." : "Pilih Foto"}
+              </label>
               <input
                 ref={fileRef}
                 id="pf-photo"
                 type="file"
                 accept="image/*"
-                className="absolute w-px h-px p-0 -m-px overflow-hidden opacity-0"
+                disabled={photoBusy}
+                className="sr-only"
                 onChange={async (e) => {
                   const file = e.target.files?.[0];
                   if (file) {
@@ -124,14 +134,6 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
                   e.target.value = "";
                 }}
               />
-              <button
-                type="button"
-                onClick={() => fileRef.current?.click()}
-                disabled={photoBusy}
-                className="inline-flex items-center gap-2 rounded-md border border-gray-700 bg-transparent px-4 py-2 text-sm font-medium uppercase tracking-wider text-foreground transition-colors hover:bg-gray-800 disabled:opacity-50 whitespace-nowrap focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-black"
-              >
-                {photoBusy ? "Memproses..." : "Pilih Foto"}
-              </button>
               {photoValue && (
                 <button
                   type="button"

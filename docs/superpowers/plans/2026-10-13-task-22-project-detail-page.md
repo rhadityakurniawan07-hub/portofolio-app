@@ -1,7 +1,7 @@
 # Task 22: Project Detail Page
 
 > Sumber: saran pengembangan — halaman detail proyek terpisah dari kartu ringkas.
-> Status: BELUM dikerjakan.
+> Status: SELESAI.
 
 **Tech Stack:** Next.js 16 App Router, React 19, Tailwind 3 dark-mode `#0F172A`, Zustand 5 persist.
 

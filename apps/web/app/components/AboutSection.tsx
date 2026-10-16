@@ -6,11 +6,11 @@ import { useProfileStore } from "@/stores/use-profile";
 export function AboutSection() {
   const profile = useProfileStore((s) => s.profile);
   const [imgError, setImgError] = useState(false);
-  const showPhoto = Boolean(profile.photoUrl) && !imgError;
+  const showPhoto = Boolean(profile.aboutPhotoUrl) && !imgError;
 
   useEffect(() => {
     setImgError(false);
-  }, [profile.photoUrl]);
+  }, [profile.aboutPhotoUrl]);
 
   return (
     <section className="editorial-section" aria-labelledby="about-heading">
@@ -24,7 +24,7 @@ export function AboutSection() {
                 <div className="absolute inset-0 bg-gradient-to-br from-red-600/10 to-transparent" />
                 {showPhoto ? (
                   <img
-                    src={profile.photoUrl}
+                    src={profile.aboutPhotoUrl}
                     alt={`Foto ${profile.name}`}
                     className="absolute inset-0 h-full w-full object-cover"
                     onError={() => setImgError(true)}

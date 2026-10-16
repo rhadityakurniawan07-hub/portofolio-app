@@ -13,12 +13,14 @@ model Profile {
   role            String
   tagline         String
   bio             String
+  longBio         String?
   location        String
   email           String   @unique
   availability    String
   availabilityStatus String @default("available")
   phone           String?
   photoUrl        String?
+  aboutPhotoUrl   String?
   github          String?
   linkedin        String?
   twitter         String?

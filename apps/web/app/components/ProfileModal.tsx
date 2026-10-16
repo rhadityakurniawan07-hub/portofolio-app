@@ -18,6 +18,7 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
   const [photoBusy, setPhotoBusy] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
   const fileRef = useRef<HTMLInputElement>(null);
+  const fileRefAbout = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (open) {
@@ -30,14 +31,15 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
   }, [open]);
 
   const photoValue = (form.photoUrl ?? "").trim();
+  const aboutPhotoValue = (form.aboutPhotoUrl ?? "").trim();
 
-  const handlePhotoFile = async (f: File | undefined) => {
+  const handlePhotoFile = async (f: File | undefined, key: "photoUrl" | "aboutPhotoUrl" = "photoUrl") => {
     if (!f) return;
     setPhotoBusy(true);
     setErrors((prev) => prev.filter((e) => !e.startsWith("Foto:"))); // hapus error foto lama
     try {
       const dataUrl = await downscaleImage(f);
-      setForm((prev) => ({ ...prev, photoUrl: dataUrl }));
+      setForm((prev) => ({ ...prev, [key]: dataUrl }));
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Gagal membaca foto";
       setErrors((prev) => [...prev, `Foto: ${msg}`]);
@@ -59,6 +61,7 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
       }),
       ...validateProfileUrls({ github: form.github, telegram: form.telegram, whatsapp: form.whatsapp }),
       ...(photoValue.startsWith("data:") ? [] : validateOptionalUrl("Foto Profil", photoValue)),
+      ...(aboutPhotoValue.startsWith("data:") ? [] : validateOptionalUrl("Foto Tentang Saya", aboutPhotoValue)),
     ];
     if (errs.length > 0) {
       setErrors(errs);
@@ -72,6 +75,7 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
       telegram: form.telegram.trim() ? normalizeUrl(form.telegram) : form.telegram,
       whatsapp: form.whatsapp.trim() ? normalizeUrl(form.whatsapp) : form.whatsapp,
       photoUrl: photoValue.startsWith("data:") ? photoValue : photoValue ? normalizeUrl(photoValue) : "",
+      aboutPhotoUrl: aboutPhotoValue.startsWith("data:") ? aboutPhotoValue : aboutPhotoValue ? normalizeUrl(aboutPhotoValue) : "",
     });
     setErrors([]);
     showToast("Profil berhasil diperbarui", "success");
@@ -146,6 +150,53 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
             </div>
             <p className="mt-1 text-xs text-muted-foreground">JPG/PNG dari perangkat — otomatis diperkecil agar hemat penyimpanan</p>
           </div>
+        </div>
+        <div>
+          <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-1 block" htmlFor="pf-about-photo">FOTO TENTANG SAYA</label>
+          <div className="mt-2 flex items-center gap-4">
+            <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-md border border-gray-700 bg-gray-900 text-xl font-bold text-primary/30" aria-hidden="true">
+              {aboutPhotoValue ? (
+                <img src={aboutPhotoValue} alt="" className="h-full w-full object-cover" />
+              ) : (
+                (form.name.split(/\s+/).map((w) => w[0]).slice(0, 2).join("") || "FA").toUpperCase()
+              )}
+            </div>
+            <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-2">
+              <label
+                htmlFor="pf-about-photo"
+                className={`inline-flex cursor-pointer items-center gap-2 rounded-md border border-gray-700 bg-transparent px-4 py-2 text-sm font-medium uppercase tracking-wider text-foreground transition-colors hover:bg-gray-800 focus-within:ring-2 focus-within:ring-red-600 focus-within:ring-offset-2 focus-within:ring-offset-black ${
+                  photoBusy ? "pointer-events-none opacity-50" : ""
+                }`}
+              >
+                {photoBusy ? "Memproses..." : "Pilih Foto"}
+              </label>
+              <input
+                ref={fileRefAbout}
+                id="pf-about-photo"
+                type="file"
+                accept="image/*"
+                disabled={photoBusy}
+                className="sr-only"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    await handlePhotoFile(file, "aboutPhotoUrl");
+                  }
+                  e.target.value = "";
+                }}
+              />
+              {aboutPhotoValue && (
+                <button
+                  type="button"
+                  onClick={() => setForm({ ...form, aboutPhotoUrl: "" })}
+                  className="text-xs font-medium text-muted-foreground hover:text-red-400 transition-colors"
+                >
+                  Hapus foto (kembali ke inisial)
+                </button>
+              )}
+            </div>
+          </div>
+          <p className="mt-1 text-xs text-muted-foreground">Foto aktivitas untuk section Tentang Saya</p>
         </div>
         <div>
           <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-1 block" htmlFor="pf-name">NAMA LENGKAP</label>

@@ -24,7 +24,7 @@ export const useOwnerStore = create<OwnerState>()(
         set({ failedAttempts: get().failedAttempts + 1 });
         return "PIN salah";
       },
-      logout: () => set({ ownerMode: false }),
+      logout: () => set({ ownerMode: false, failedAttempts: 0 }),
     }),
     { name: "portfolio-owner", partialize: (s) => ({ ownerMode: s.ownerMode }) as OwnerState }
   )

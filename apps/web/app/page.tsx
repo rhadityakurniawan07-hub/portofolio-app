@@ -1,8 +1,10 @@
 "use client";
 
 import { HeroSection } from "./components/HeroSection";
-import { ProfileCard } from "./components/ProfileCard";
 import { AboutSection } from "./components/AboutSection";
+import { ProjectsSection } from "./components/ProjectsSection";
+import { ContactSection } from "./components/ContactSection";
+import { ProfileCard } from "./components/ProfileCard";
 
 export default function Home() {
   return (
@@ -11,6 +13,8 @@ export default function Home() {
         <HeroSection />
         <AboutSection />
         <ProfileCard />
+        <ProjectsSection />
+        <ContactSection />
       </div>
     </div>
   );

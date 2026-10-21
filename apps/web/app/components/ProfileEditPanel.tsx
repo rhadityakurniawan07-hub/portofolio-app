@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { useProfileStore } from '@/stores/use-profile'
 import { useToast } from '@/components/Toast'
 import { parseDaftar, normalizeUrl, validateProfileInput, validateProfileUrls, validateOptionalUrl } from '@/lib/portfolio'
@@ -11,7 +10,6 @@ export function ProfileEditPanel() {
   const profile = useProfileStore((s) => s.profile)
   const updateProfile = useProfileStore((s) => s.updateProfile)
   const { showToast } = useToast()
-  const router = useRouter()
   const [form, setForm] = useState(profile)
   const [specInput, setSpecInput] = useState(profile.specializations.join(', '))
   const [langInput, setLangInput] = useState(profile.languages.join(', '))
@@ -115,10 +113,9 @@ export function ProfileEditPanel() {
     } catch {
       showToast('Gagal kirim ke database (cek koneksi)', 'error')
     }
-    setErrors([])
-    showToast('Profil masih diperbarui', 'success')
-    router.push('/')
-  }
+setErrors([])
+      showToast('Data masih diperbarui', 'success')
+    }
 
   const field = 'w-full rounded-md border border-gray-700 bg-gray-900/50 px-3 py-2.5 text-sm focus:border-red-600 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-black'
 

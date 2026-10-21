@@ -4,15 +4,11 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Mail, MapPin, MessageSquare, Github, Send, Briefcase, Code, Cpu } from "lucide-react";
 import { useProfileStore } from "@/stores/use-profile";
-import { useOwnerStore } from "@/stores/use-owner";
-import { ProfileModal } from "./ProfileModal";
 
 export function HeroSection() {
   const [copied, setCopied] = useState(false);
-  const [profileOpen, setProfileOpen] = useState(false);
   const [imgError, setImgError] = useState(false);
   const profile = useProfileStore((s) => s.profile);
-  const ownerMode = useOwnerStore((s) => s.ownerMode);
 
   useEffect(() => {
     setImgError(false);
@@ -45,7 +41,7 @@ export function HeroSection() {
           </p>
 
           {/* Nama Bold Uppercase */}
-          <h1 id="hero-heading" className="editorial-heading text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight uppercase leading-tight text-foreground mb-4">
+          <h1 id="hero-heading" className="editorial-heading text-3xl md:text-5xl font-bold tracking-tight uppercase leading-tight text-foreground mb-4">
             {profile.name.toUpperCase()}
           </h1>
 
@@ -84,13 +80,13 @@ export function HeroSection() {
               WhatsApp
             </a>
             <Link
-              href="/contact"
+              href="/#kontak"
               className="btn-secondary"
             >
               Hubungi Saya
             </Link>
             <Link
-              href="/projects"
+              href="/#projects-heading"
               className="btn-secondary"
             >
               Lihat Portofolio
@@ -147,33 +143,23 @@ export function HeroSection() {
               WhatsApp
             </a>
             <Link
-              href="/contact"
+              href="/#kontak"
               className="btn-secondary"
             >
               Hubungi Saya
             </Link>
             <Link
-              href="/projects"
+              href="/#projects-heading"
               className="btn-secondary"
             >
               Lihat Portofolio
             </Link>
           </div>
-
-          {ownerMode && (
-            <button
-              onClick={() => setProfileOpen(true)}
-              className="mt-8 inline-flex items-center gap-2 rounded-md border border-gray-700 bg-transparent px-4 py-2 text-xs font-medium uppercase tracking-wider text-muted-foreground transition-colors hover:bg-gray-800 hover:text-foreground"
-              aria-label="Ubah profil"
-            >
-              Ubah Profil (Pemilik)
-            </button>
-          )}
         </div>
 
         {/* Kolom Kanan - Foto Profil Persegi Besar */}
         <div className="relative flex justify-center lg:pl-8">
-          <div className="relative aspect-square max-w-xs lg:max-w-md mx-auto">
+          <div className="relative aspect-square w-full max-w-xs md:max-w-sm mx-auto">
             <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-red-600/20 to-red-600/5 blur-2xl" />
             <div className="relative aspect-square rounded-xl border-2 border-red-600/50 bg-gray-900 overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-red-600/10 to-transparent" />
@@ -196,16 +182,6 @@ export function HeroSection() {
           </div>
         </div>
       </div>
-
-      <ProfileModal open={profileOpen} onClose={() => setProfileOpen(false)} />
-      {copied && (
-        <div
-          role="status"
-          className="fixed bottom-6 left-1/2 z-[100] -translate-x-1/2 rounded-md border border-green-500/30 bg-gray-950 px-4 py-2 text-sm font-medium text-green-400 shadow-2xl animate-slide-in"
-        >
-          Email disalin ke clipboard
-        </div>
-      )}
     </section>
   );
 }

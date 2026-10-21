@@ -113,9 +113,9 @@ export function ProfileEditPanel() {
     } catch {
       showToast('Gagal kirim ke database (cek koneksi)', 'error')
     }
-setErrors([])
-      showToast('Data masih diperbarui', 'success')
-    }
+    setErrors([])
+    showToast('Data masih diperbarui', 'success')
+  }
 
   const field = 'w-full rounded-md border border-gray-700 bg-gray-900/50 px-3 py-2.5 text-sm focus:border-red-600 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-black'
 

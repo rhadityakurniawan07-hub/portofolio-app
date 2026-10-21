@@ -9,7 +9,7 @@ import { ProfileCard } from "./components/ProfileCard";
 export default function Home() {
   return (
     <div className="container py-12 md:py-24">
-      <div className="max-w-6xl mx-auto px-4 space-y-16">
+      <div className="max-w-6xl mx-auto px-4 md:px-8 space-y-16">
         <HeroSection />
         <AboutSection />
         <ProfileCard />

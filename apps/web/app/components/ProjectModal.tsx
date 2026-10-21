@@ -30,31 +30,74 @@ export function ProjectModal({ open, onClose, editingId }: { open: boolean; onCl
     }
   }, [open, editing?.title, editing?.description, editing?.techStack, editing?.projectUrl, editing?.year]);
 
-  const save = () => {
+const save = async () => {
     const techStack = tech.split(",").map(t => t.trim()).filter(Boolean);
     const errs = validateProjectInput({ title, description, techStack, year, link });
     if (errs.length > 0) {
       setErrors(errs);
       return;
     }
-    if (editing) {
-      updateProject(editing.id, { title, description, techStack, year, projectUrl: link });
-      showToast("Proyek berhasil diperbarui", "success");
-    } else {
-      addProject({
-        title,
-        description,
-        techStack,
-        year,
-        category: "Online",
-        status: "Production",
-        projectUrl: link,
-        githubUrl: "",
-        featured: false,
-      } as unknown as Parameters<typeof addProject>[0]);
-      showToast("Proyek berhasil disimpan", "success");
+    const payload = {
+      title,
+      description,
+      techStack,
+      year,
+      link,
+      githubUrl: "",
+      category: "Online",
+      status: "Production",
+      featured: false,
+    };
+    try {
+      if (editing) {
+        updateProject(editing.id, { title, description, techStack, year, projectUrl: link });
+        showToast("Proyek masih diperbarui", "success");
+        // Persist ke database (Prisma) — lapisan tambahan
+        try {
+          const res = await fetch('/api/projects?id=' + encodeURIComponent(editing.id), {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          if (!res.ok) {
+            const data = await res.json().catch(() => ({}));
+            showToast('Gagal simpan ke database: ' + (data.error || 'Status ' + res.status), 'error');
+          }
+        } catch {
+          showToast('Gagal kirim ke database (cek koneksi)', 'error');
+        }
+      } else {
+        addProject({
+          title,
+          description,
+          techStack,
+          year,
+          category: "Online",
+          status: "Production",
+          projectUrl: link,
+          githubUrl: "",
+          featured: false,
+        } as unknown as Parameters<typeof addProject>[0]);
+        showToast("Proyek masih disimpan", "success");
+        // Persist ke database (Prisma) — lapisan tambahan
+        try {
+          const res = await fetch('/api/projects', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          if (!res.ok) {
+            const data = await res.json().catch(() => ({}));
+            showToast('Gagal simpan ke database: ' + (data.error || 'Status ' + res.status), 'error');
+          }
+        } catch {
+          showToast('Gagal kirim ke database (cek koneksi)', 'error');
+        }
+      }
+      onClose();
+    } catch {
+      showToast('Gagal menyimpan ke penyimpanan browser', 'error');
     }
-    onClose();
   };
 
   const field = "w-full rounded-md border border-gray-700 bg-gray-900/50 px-3 py-2.5 text-sm focus:border-red-600 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-black";

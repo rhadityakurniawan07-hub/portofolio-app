@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { prisma } from "@repo/database";
 
 const contactSchema = z.object({
   name: z.string().min(2, "Nama minimal 2 karakter"),
@@ -64,6 +65,16 @@ export async function POST(req: NextRequest) {
 
     const { name, email, subject, message } = parsed.data;
 
+    // Simpan ke database (Prisma) — lapisan persistensi, tidak menggantikan email
+    try {
+      await prisma.contactMessage.create({
+        data: { name, email, subject, message },
+      });
+    } catch (dbErr) {
+      console.error("[API] Gagal simpan ContactMessage ke DB:", dbErr);
+      // Tidak menghentikan alur — email masih akan dikirim (jika API key ada)
+    }
+
     const resendApiKey = process.env.RESEND_API_KEY;
     const contactTo = process.env.CONTACT_TO_EMAIL;
     const contactFrom =
@@ -119,6 +130,22 @@ export async function POST(req: NextRequest) {
     console.error("[API] POST /api/contact error:", error);
     return NextResponse.json(
       { error: "Gagal mengirim pesan. Coba lagi nanti." },
+      { status: 500 }
+    );
+  }
+}
+
+export async function GET() {
+  try {
+    const messages = await prisma.contactMessage.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 100,
+    });
+    return NextResponse.json({ messages });
+  } catch (error) {
+    console.error("[API] GET /api/contact error:", error);
+    return NextResponse.json(
+      { error: "Gagal mengambil riwayat pesan" },
       { status: 500 }
     );
   }

@@ -43,10 +43,21 @@ model Project {
   githubUrl   String?
   year        String
   category    String
-  status      String   @default("Production")
-  featured    Boolean  @default(false)
+  status      String  @default("Production")
+  featured    Boolean @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   @@map("projects")
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  createdAt DateTime @default(now())
+
+  @@map("contact_messages")
 }

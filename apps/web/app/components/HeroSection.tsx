@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Mail, MapPin, MessageSquare, Github, Send, Briefcase, Code, Cpu } from "lucide-react";
+import { Mail, MessageSquare, Github, Briefcase, Code, Cpu } from "lucide-react";
 import { useProfileStore } from "@/stores/use-profile";
 
 export function HeroSection() {
@@ -57,14 +57,16 @@ export function HeroSection() {
 
           {/* Tombol Aksi */}
           <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
+            <Link href="/#projects-heading" className="btn-primary">
+              <Code className="h-4 w-4" aria-hidden="true" />
+              Lihat Proyek
+            </Link>
             <button
               onClick={handleCopyEmail}
-              className="btn-primary"
+              className="btn-secondary"
               aria-label={copied ? "Email disalin" : "Hubungi langsung"}
             >
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
+              <Mail className="h-4 w-4" aria-hidden="true" />
               {copied ? "Disalin!" : "Hubungi Langsung"}
               <span role="status" className="sr-only">
                 {copied ? "Email disalin" : ""}
@@ -76,21 +78,9 @@ export function HeroSection() {
               rel="noopener noreferrer"
               className="btn-secondary"
             >
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15 3 13.574 3 12c0-4.418 4.03-8 9-8s9 4.03 9 8v1.028c-3.707.213-6.456.937-7.992 2.546L12 21l-1.75-3.245" /></svg>
+              <MessageSquare className="h-4 w-4" aria-hidden="true" />
               WhatsApp
             </a>
-            <Link
-              href="/#kontak"
-              className="btn-secondary"
-            >
-              Hubungi Saya
-            </Link>
-            <Link
-              href="/#projects-heading"
-              className="btn-secondary"
-            >
-              Lihat Portofolio
-            </Link>
           </div>
 
           {/* Tabel Info Ringkas */}
@@ -140,20 +130,8 @@ export function HeroSection() {
               aria-label="WhatsApp"
             >
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15 3 13.574 3 12c0-4.418 4.03-8 9-8s9 4.03 9 8v1.028c-3.707.213-6.456.937-7.992 2.546L12 21l-1.75-3.245" /></svg>
-              WhatsApp
+              <span className="font-mono text-xs">WhatsApp</span>
             </a>
-            <Link
-              href="/#kontak"
-              className="btn-secondary"
-            >
-              Hubungi Saya
-            </Link>
-            <Link
-              href="/#projects-heading"
-              className="btn-secondary"
-            >
-              Lihat Portofolio
-            </Link>
           </div>
         </div>
 

@@ -1,5 +1,6 @@
 "use client";
-import { ExternalLink, Pencil, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { ArrowUpRight, ExternalLink, Github } from "lucide-react";
 import type { Project } from "@/data/profile";
 
 export function ProjectCard({ project, onEdit, onDelete, canManage }: { project: Project; onEdit: () => void; onDelete: () => void; canManage: boolean }) {
@@ -21,9 +22,16 @@ export function ProjectCard({ project, onEdit, onDelete, canManage }: { project:
                 </button>
               </>
             )}
-            <a href={project.projectUrl} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-red-600 focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-black" aria-label={`Buka ${project.title}`}>
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-            </a>
+            {project.projectUrl && (
+              <a href={project.projectUrl} target="_blank" rel="noopener noreferrer" className="rounded-md p-1.5 text-muted-foreground hover:bg-white/5 hover:text-primary focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-black" aria-label={`Live demo ${project.title}`} title="Live Demo">
+                <ExternalLink className="h-4 w-4" aria-hidden="true" />
+              </a>
+            )}
+            {project.githubUrl && (
+              <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="rounded-md p-1.5 text-muted-foreground hover:bg-white/5 hover:text-primary focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-black" aria-label={`Repository GitHub ${project.title}`} title="GitHub Repository">
+                <Github className="h-4 w-4" aria-hidden="true" />
+              </a>
+            )}
           </div>
         </div>
         <div className="space-y-1">
@@ -49,15 +57,13 @@ export function ProjectCard({ project, onEdit, onDelete, canManage }: { project:
         </div>
       </div>
       <div className="mt-auto border-t border-gray-800 px-6 py-4">
-        <a
-          href={project.projectUrl}
-          target="_blank"
-          rel="noopener noreferrer"
+        <Link
+          href={`/projects/${project.id}`}
           className="inline-flex items-center gap-2 rounded-md bg-red-600 text-white px-4 py-2 text-sm font-semibold uppercase tracking-wider transition-colors hover:bg-red-700 focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-black"
         >
-          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-          BUKA WEB PROYEK
-        </a>
+          <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+          Ke Halaman Detail
+        </Link>
       </div>
     </article>
   );

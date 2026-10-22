@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useProfileStore } from "@/stores/use-profile";
+import { TechBadge } from "./TechBadge";
 
 export function AboutSection() {
   const profile = useProfileStore((s) => s.profile);
@@ -13,7 +14,7 @@ export function AboutSection() {
   }, [profile.aboutPhotoUrl]);
 
   return (
-    <section className="editorial-section" aria-labelledby="about-heading">
+    <section className="editorial-section border-t border-gray-800 pt-12 md:pt-16" aria-labelledby="about-heading">
       <div className="editorial-grid-2">
         {/* Kolom Kiri - Foto Profil dengan Filter Merah */}
         <div className="editorial-hero-right">
@@ -59,12 +60,7 @@ export function AboutSection() {
           {/* Tech Stack Badges */}
           <div className="flex flex-wrap gap-2 mb-8">
             {profile.specializations.map((tech) => (
-              <span
-                key={tech}
-                className="badge-pill"
-              >
-                {tech}
-              </span>
+              <TechBadge key={tech} name={tech} />
             ))}
           </div>
         </div>

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useToast } from "@/components/Toast";
-import { Mail, Send, AlertCircle, CheckCircle, Loader2 } from "lucide-react";
+import { Send, Loader2 } from "lucide-react";
 
 interface ContactFormProps {
   className?: string;
@@ -205,21 +205,17 @@ export function ContactForm({ className }: ContactFormProps) {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-md bg-gray-900 text-white px-6 py-3 text-sm font-medium uppercase tracking-wider transition-colors hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-[#0F172A]"
+            aria-busy={isSubmitting}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-md bg-red-600 text-white px-6 py-3 text-sm font-semibold uppercase tracking-wider transition-colors hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-black"
           >
             {isSubmitting ? (
               <>
-                <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                </svg>
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
                 Mengirim...
               </>
             ) : (
               <>
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 19l9 2-9-18-6 12h18l-6 6-6-6 6-6 6 6h-18l-6 6z" stroke="currentColor" />
-                </svg>
+                <Send className="h-4 w-4" aria-hidden="true" />
                 Kirim Pesan
               </>
             )}

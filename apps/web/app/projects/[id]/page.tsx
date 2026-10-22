@@ -15,6 +15,8 @@ export default function ProjectDetailPage() {
   const projects = useProjectsStore((s) => s.projects);
   const removeProject = useProjectsStore((s) => s.removeProject);
   const ownerMode = useOwnerStore((s) => s.ownerMode);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<number | string | null>(null);
 
   const project = useMemo(
     () => projects.find((p) => String(p.id) === String(id)),
@@ -26,7 +28,7 @@ export default function ProjectDetailPage() {
       <div className="container py-12 md:py-24">
         <div className="max-w-7xl mx-auto text-center">
           <Link
-            href="/projects"
+            href="/#projects-heading"
             className="inline-flex items-center gap-2 rounded-md border border-gray-700 bg-transparent px-5 py-3 text-sm font-medium uppercase tracking-wider text-foreground transition-colors hover:bg-gray-800 focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-[#0F172A]"
           >
             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -43,15 +45,12 @@ export default function ProjectDetailPage() {
     );
   }
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [deleteId, setDeleteId] = useState<number | string | null>(null);
-
   return (
     <div className="container py-12 md:py-24">
       <div className="max-w-4xl mx-auto space-y-10">
         {/* Header with back link */}
         <Link
-          href="/projects"
+          href="/#projects-heading"
           className="inline-flex items-center gap-2 rounded-md border border-gray-700 bg-transparent px-4 py-2 text-sm font-medium uppercase tracking-wider text-foreground transition-colors hover:bg-gray-800 focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-[#0F172A]"
         >
           <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -169,7 +168,7 @@ export default function ProjectDetailPage() {
               </a>
             )}
             <Link
-              href="/projects"
+              href="/#projects-heading"
               className="inline-flex items-center gap-2 rounded-md border border-gray-700 bg-transparent px-5 py-3 text-sm font-medium uppercase tracking-wider text-foreground transition-colors hover:bg-gray-800 focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-[#0F172A]"
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

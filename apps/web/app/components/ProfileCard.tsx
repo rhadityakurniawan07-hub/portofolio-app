@@ -38,7 +38,7 @@ export function ProfileCard() {
       { label: "GitHub", href: profile.github, icon: "github" as const },
       { label: "Telegram", href: profile.telegram, icon: "send" as const },
       { label: "WhatsApp", href: profile.whatsapp, icon: "mail" as const },
-    ]},
+    ].filter((link) => Boolean(link.href)) },
   ];
 
   return (

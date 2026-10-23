@@ -108,7 +108,7 @@ a {
   }
 
   .editorial-hero-photo {
-    @apply relative aspect-square max-w-xs lg:max-w-md mx-auto;
+    @apply relative aspect-square w-full max-w-xs lg:max-w-md mx-auto;
   }
 
   .editorial-hero-photo-inner {
@@ -230,7 +230,7 @@ a {
   }
 
   .editorial-hero-photo {
-    @apply relative aspect-square max-w-xs lg:max-w-md mx-auto;
+    @apply relative aspect-square w-full max-w-xs lg:max-w-md mx-auto;
   }
 
   .editorial-hero-photo-inner {

@@ -14,7 +14,6 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
   const [form, setForm] = useState(profile);
   const [specInput, setSpecInput] = useState(profile.specializations.join(", "));
   const [langInput, setLangInput] = useState(profile.languages.join(", "));
-  const [longBioInput, setLongBioInput] = useState(profile.longBio || "");
   const [photoBusy, setPhotoBusy] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -67,16 +66,24 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
       setErrors(errs);
       return;
     }
-    updateProfile({
-      ...form,
-      specializations: parseDaftar(specInput),
-      languages: parseDaftar(langInput),
-      github: form.github.trim() ? normalizeUrl(form.github) : form.github,
-      telegram: form.telegram.trim() ? normalizeUrl(form.telegram) : form.telegram,
-      whatsapp: form.whatsapp.trim() ? normalizeUrl(form.whatsapp) : form.whatsapp,
-      photoUrl: photoValue.startsWith("data:") ? photoValue : photoValue ? normalizeUrl(photoValue) : "",
-      aboutPhotoUrl: aboutPhotoValue.startsWith("data:") ? aboutPhotoValue : aboutPhotoValue ? normalizeUrl(aboutPhotoValue) : "",
-    });
+    try {
+      updateProfile({
+        ...form,
+        specializations: parseDaftar(specInput),
+        languages: parseDaftar(langInput),
+        github: form.github.trim() ? normalizeUrl(form.github) : form.github,
+        telegram: form.telegram.trim() ? normalizeUrl(form.telegram) : form.telegram,
+        whatsapp: form.whatsapp.trim() ? normalizeUrl(form.whatsapp) : form.whatsapp,
+        photoUrl: photoValue.startsWith("data:") ? photoValue : photoValue ? normalizeUrl(photoValue) : "",
+        aboutPhotoUrl: aboutPhotoValue.startsWith("data:") ? aboutPhotoValue : aboutPhotoValue ? normalizeUrl(aboutPhotoValue) : "",
+      });
+    } catch {
+      setErrors([
+        "Gagal menyimpan ke penyimpanan browser. Penyimpanan mungkin penuh — hapus foto lama atau gunakan foto yang lebih kecil, lalu coba lagi.",
+      ]);
+      showToast("Gagal menyimpan: penyimpanan browser mungkin penuh", "error");
+      return;
+    }
     setErrors([]);
     showToast("Profil berhasil diperbarui", "success");
     onClose();

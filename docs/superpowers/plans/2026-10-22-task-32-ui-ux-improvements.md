@@ -12,7 +12,7 @@
 - **Tanpa dependensi baru**: `lucide-react` sudah terpasang. Toast memakai `ToastProvider` yang sudah ada (bukan sonner/react-hot-toast).
 - **Jangan ubah urutan section**: Hero → About → ProfileCard → Projects → Contact.
 - **Verifikasi**: `bunx turbo run check-types lint build --filter=web` harus PASS + smoke test route.
-- **Catatan**: Bagian 2 (spacing) **direvisi oleh Task 31**: tanpa `border-t`, jarak `space-y-12 md:space-y-16` di `page.tsx`.
+- **Catatan**: Bagian 2 (spacing) **direvisi oleh Task 31**: tanpa `border-t`, jarak `space-y-16 md:space-y-24` di `page.tsx`.
 
 ## File yang disentuh
 
@@ -74,7 +74,7 @@
 
 ## Bagian 2: Layout spacing — hilangkan jarak kosong berlebih
 
-> **REVISI (Task 31):** pendekatan `border-t + pt-12 md:pt-16` di bawah **dibatalkan**. Kondisi final: tanpa garis pemisah antar section, jarak `space-y-12 md:space-y-16` di `page.tsx`. Lihat `2026-10-21-task-31-section-spacing.md`.
+> **REVISI (Task 31):** pendekatan `border-t + pt-12 md:pt-16` di bawah **dibatalkan**. Kondisi final: tanpa garis pemisah antar section, jarak `space-y-16 md:space-y-24` di `page.tsx`. Lihat `2026-10-21-task-31-section-spacing.md`.
 
 **Masalah:** `page.tsx` memakai `space-y-24 md:space-y-32` (96/128px) **ditambah** `py-12 md:py-20` pada Projects/Contact → jarak ProfileCard → Projects mencapai ±208px di desktop.
 
@@ -278,7 +278,7 @@ export function TechBadge({ name }: { name: string }) {
 
 ## Catatan
 
-- Bagian 2 (spacing) **direvisi oleh Task 31**: tanpa `border-t`, jarak `space-y-12 md:space-y-16` di `page.tsx`.
+- Bagian 2 (spacing) **direvisi oleh Task 31**: tanpa `border-t`, jarak `space-y-16 md:space-y-24` di `page.tsx`.
 - Tidak menambah dependensi; toast memakai `ToastProvider` internal.
 - `Lihat CV` / `Tanya AI` tidak dibuat karena belum ada aset/fitur — sebutkan ke user bila ingin ditambahkan.
 

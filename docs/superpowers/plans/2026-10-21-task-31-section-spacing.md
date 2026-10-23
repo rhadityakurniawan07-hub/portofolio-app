@@ -8,7 +8,7 @@
 ## Keputusan Final
 
 - **Tidak memakai garis pemisah** (`border-t`) antar section.
-- **Jarak sedang** antar section: `space-y-12` (48px) di mobile, `space-y-16` (64px) di desktop.
+- **Jarak** antar section: `space-y-16` (64px) di mobile, `space-y-24` (96px) di desktop.
 - Jarak diatur **satu sumber** di container halaman (`page.tsx`), bukan padding per-section.
 - Urutan section tidak berubah: Hero → About → ProfileCard → Projects → Contact.
 
@@ -26,7 +26,7 @@
 
 ## Perubahan
 
-- [•] `page.tsx`: container inner menjadi `max-w-6xl mx-auto px-4 md:px-8 space-y-12 md:space-y-16`.
+- [•] `page.tsx`: container inner menjadi `max-w-6xl mx-auto px-4 md:px-8 space-y-16 md:space-y-24`.
 - [•] `AboutSection.tsx`: `<section className="editorial-section">` (hapus `border-t border-gray-800 pt-12 md:pt-16`).
 - [•] `ProfileCard.tsx`: `<section aria-labelledby="profil-heading">` (hapus border + padding atas).
 - [•] `ProjectsSection.tsx`: `<section aria-labelledby="projects-heading">` (hapus border + padding atas).
@@ -41,9 +41,9 @@
 | `lint` | PASS |
 | `build` | PASS (8 routes) |
 | Garis pemisah antar section | tidak ada |
-| Jarak antar section | 48px mobile / 64px desktop |
+| Jarak antar section | 64px mobile / 96px desktop |
 
 ## Catatan
 
 - Garis (`border-t`) masih boleh ada **di dalam komponen** (mis. header kartu, footer kartu, tabel) — yang dihapus hanya garis pemisah **antar section**.
-- `space-y-12 md:space-y-16` dipilih karena terasa lega namun tetap rapat; mudah disesuaikan bila ingin lebih longgar/rapat.
+- `space-y-16 md:space-y-24` dipilih setelah 48/64px terasa terlalu dekat; masih bisa dinaikkan/diturunkan bila perlu.

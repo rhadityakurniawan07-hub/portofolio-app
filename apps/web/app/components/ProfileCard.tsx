@@ -42,7 +42,7 @@ export function ProfileCard() {
   ];
 
   return (
-    <section className="border-t border-gray-800 pt-12 md:pt-16" aria-labelledby="profil-heading">
+    <section aria-labelledby="profil-heading">
       <div className="editorial-card">
         <div className="editorial-card-header">
           <h2 id="profil-heading" className="editorial-card-title">

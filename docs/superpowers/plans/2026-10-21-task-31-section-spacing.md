@@ -1,61 +1,49 @@
-# Task 31: Tambah spacing antar section di halaman utama
+# Task 31: Jarak Antar Section di Halaman Utama (Revisi)
 
-> Sumber: user — "tambahkan jarak (margin-bottom / spacing) yang cukup dan lega antar section di halaman utama agar antarmuka tidak terlalu menempel padat"
-> Status: DONE (selesai 2026-10-22, semua checklist terpenuhi).
+> Sumber: user — "task 31 itu hanya diberi garis saja bukan menambahkan jarak... sekarang diberi jarak sedikit saja, jangan terlalu jauh dan jangan terlalu pendek, dan jangan diberi garis seperti sebelumnya."
+> Status: **DONE — REVISI** (selesai 2026-10-22).
 
-**Tech Stack:** Next.js 16 App Router, Tailwind CSS, React 19.
+**Tech Stack:** Next.js 16 App Router, Tailwind CSS 3.4, React 19.
 
-## Global Constraints
+## Keputusan Final
 
-- **Jangan ubah tampilan section itu sendiri**: Hero, About, ProfileCard, Projects, Contact tetap sama (warna, layout, konten).
-- **Hanya ubah spacing/jarak antar section** di `apps/web/app/page.tsx`.
-- **Jangan ubah section order**: Hero → About → ProfileCard → Projects → Contact (dari Task 26).
-- **Tanpa dependensi baru**: gunakan Tailwind spacing utility (`space-y-*`, `mb-*`, `py-*`).
-- **Verifikasi**: `bunx turbo run check-types lint build --filter=web` menunjukkan PASS.
+- **Tidak memakai garis pemisah** (`border-t`) antar section.
+- **Jarak sedang** antar section: `space-y-12` (48px) di mobile, `space-y-16` (64px) di desktop.
+- Jarak diatur **satu sumber** di container halaman (`page.tsx`), bukan padding per-section.
+- Urutan section tidak berubah: Hero → About → ProfileCard → Projects → Contact.
 
-## Task
+> Catatan: ini menggantikan dua pendekatan sebelumnya yang tidak sesuai:
+> 1. `space-y-24 md:space-y-32` (96/128px) — terlalu jauh.
+> 2. `border-t + pt-12 md:pt-16` per section — memakai garis dan jarak tidak konsisten.
 
-### Bagian 1: Tambah spacing antar section
+## File yang disentuh
 
-- [•] Baca `apps/web/app/page.tsx` penuh.
-- [•] Saat ini container inner punya class `space-y-16` (jarak 64px antar section).
-- [•] Ubah class inner container dari `space-y-16` menjadi spacing yang lebih lega, misal:
-  - [•] Opsi A: `space-y-24 md:space-y-32` (96px desktop / 96px mobile) — **dipilih**
-  - [ ] Opsi B: `space-y-20 md:space-y-40` (80px mobile / 160px desktop)
-  - [ ] Opsi C: tambah `pt-*` / `pb-*` pada tiap section child (misal `mb-20 md:mb-32`)
-- [•] Pilih opsi yang paling seimbang tanpa membuat halaman terlalu panjang (perhatikan viewport mobile).
+- Modify: `apps/web/app/page.tsx`
+- Modify: `apps/web/app/components/AboutSection.tsx`
+- Modify: `apps/web/app/components/ProfileCard.tsx`
+- Modify: `apps/web/app/components/ProjectsSection.tsx`
+- Modify: `apps/web/app/components/ContactSection.tsx`
 
-### Bagian 2: Verifikasi visual
+## Perubahan
 
-- [•] Jalankan `bunx turbo run check-types lint build --filter=web` → PASS.
-- [•] Jalankan dev server, buka `/` di browser:
-  - [•] Jarak antara Hero dan About terasa lega (tidak menempel).
-  - [•] Jarak antara About dan ProfileCard lega.
-  - [•] Jarak antara ProfileCard dan Projects lega.
-  - [•] Jarak antara Projects dan Contact lega.
-  - [•] Tidak ada overflow horizontal atau layout yang rusak di mobile.
-  - [•] Tidak ada perubahan pada konten section (teks, gambar, tombol tetap sama).
+- [•] `page.tsx`: container inner menjadi `max-w-6xl mx-auto px-4 md:px-8 space-y-12 md:space-y-16`.
+- [•] `AboutSection.tsx`: `<section className="editorial-section">` (hapus `border-t border-gray-800 pt-12 md:pt-16`).
+- [•] `ProfileCard.tsx`: `<section aria-labelledby="profil-heading">` (hapus border + padding atas).
+- [•] `ProjectsSection.tsx`: `<section aria-labelledby="projects-heading">` (hapus border + padding atas).
+- [•] `ContactSection.tsx`: `<section id="kontak" aria-labelledby="contact-heading">` (hapus border + padding atas).
+- [•] Pastikan tidak ada sisa class `border-t border-gray-800 pt-12` di level section.
 
-### Bagian 3: Git commit
+## Verifikasi
 
-- [•] Commit perubahan `apps/web/app/page.tsx` dengan pesan deskriptif.
-
-## Hasil Verifikasi (2026-10-22)
-
-| Perintah | Hasil |
+| Perintah / Cek | Hasil |
 |---|---|
-| `check-types` | PASS (3 successful, 3 total) |
-| `lint` | PASS (3 successful, 3 total) |
-| `build` | PASS (compiled successfully, 8 routes) |
-| `GET /` | 200 |
-| `GET /admin` | 200 |
-| `GET /api/contact` | 200 |
-| `GET /projects` | 404 |
-| `GET /about` | 404 |
-| `GET /contact` | 404 |
+| `check-types` | PASS |
+| `lint` | PASS |
+| `build` | PASS (8 routes) |
+| Garis pemisah antar section | tidak ada |
+| Jarak antar section | 48px mobile / 64px desktop |
 
 ## Catatan
 
-- Task ini **selesai 2026-10-22**. Semua checklist terpenuhi.
-- Opsi A (`space-y-24 md:space-y-32`) dipilih — lega tapi tidak berlebihan.
-- Hanya class Tailwind di `apps/web/app/page.tsx` yang diubah, section itu sendiri tidak diubah.
+- Garis (`border-t`) masih boleh ada **di dalam komponen** (mis. header kartu, footer kartu, tabel) — yang dihapus hanya garis pemisah **antar section**.
+- `space-y-12 md:space-y-16` dipilih karena terasa lega namun tetap rapat; mudah disesuaikan bila ingin lebih longgar/rapat.

@@ -8,7 +8,7 @@ export function ContactSection() {
   const profile = useProfileStore((s) => s.profile);
 
   return (
-    <section className="border-t border-gray-800 pt-12 md:pt-16" id="kontak" aria-labelledby="contact-heading">
+    <section id="kontak" aria-labelledby="contact-heading">
       <div className="max-w-3xl mx-auto">
         <header className="mb-12 text-center">
           <p className="mb-2 text-xs font-mono uppercase tracking-wider text-primary">HUBUNGI SAYA</p>

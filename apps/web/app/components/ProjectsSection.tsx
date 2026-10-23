@@ -92,7 +92,7 @@ export function ProjectsSection() {
   };
 
   return (
-    <section className="border-t border-gray-800 pt-12 md:pt-16" aria-labelledby="projects-heading">
+    <section aria-labelledby="projects-heading">
       <div className="max-w-7xl mx-auto">
         <div className="mb-12">
           <p className="mb-2 text-xs font-medium text-primary">• ARSIP REPOSITORI PRIBADI</p>

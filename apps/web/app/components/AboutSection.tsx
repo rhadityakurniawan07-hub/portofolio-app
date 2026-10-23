@@ -14,7 +14,7 @@ export function AboutSection() {
   }, [profile.aboutPhotoUrl]);
 
   return (
-    <section className="editorial-section border-t border-gray-800 pt-12 md:pt-16" aria-labelledby="about-heading">
+    <section className="editorial-section" aria-labelledby="about-heading">
       <div className="editorial-grid-2">
         {/* Kolom Kiri - Foto Profil dengan Filter Merah */}
         <div className="editorial-hero-right">

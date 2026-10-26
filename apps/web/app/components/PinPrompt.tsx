@@ -6,16 +6,23 @@ import { useOwnerStore } from "@/stores/use-owner";
 export function PinPrompt({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [pin, setPin] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const login = useOwnerStore((s) => s.login);
 
-  const submit = () => {
-    const err = login(pin);
+  const submit = async () => {
+    if (loading) return;
+
+    setLoading(true);
+    setError(null);
+    const err = await login(pin);
+    setLoading(false);
+
     if (err) {
       setError(err);
       return;
     }
+
     setPin("");
-    setError(null);
     onClose();
   };
 
@@ -33,10 +40,11 @@ export function PinPrompt({ open, onClose }: { open: boolean; onClose: () => voi
             Batal
           </button>
           <button
-            onClick={submit}
-            className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
+            onClick={() => void submit()}
+            disabled={loading}
+            className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            Masuk
+            {loading ? "Memproses..." : "Masuk"}
           </button>
         </>
       }
@@ -51,7 +59,7 @@ export function PinPrompt({ open, onClose }: { open: boolean; onClose: () => voi
         value={pin}
         onChange={(e) => setPin(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key === "Enter") submit();
+          if (e.key === "Enter") void submit();
         }}
         className="mt-2 w-full rounded-lg border border-gray-700 bg-gray-900/50 px-3 py-2.5 text-sm focus:border-primary focus:outline-none"
         placeholder="••••"

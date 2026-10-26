@@ -1,31 +1,63 @@
 "use client";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { checkOwnerPin } from "@/lib/portfolio";
 
 interface OwnerState {
   ownerMode: boolean;
-  failedAttempts: number;
-  login: (pin: string) => string | null;
-  logout: () => void;
+  checking: boolean;
+  login: (pin: string) => Promise<string | null>;
+  logout: () => Promise<void>;
+  refresh: () => Promise<void>;
 }
 
 export const useOwnerStore = create<OwnerState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       ownerMode: false,
-      failedAttempts: 0,
-      login: (pin) => {
-        if (get().failedAttempts >= 5) return "Terlalu banyak percobaan. Coba lagi nanti.";
-        if (checkOwnerPin(pin)) {
-          set({ ownerMode: true, failedAttempts: 0 });
-          return null;
+      checking: true,
+      login: async (pin) => {
+        try {
+          const res = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ pin }),
+          });
+
+          if (res.ok) {
+            set({ ownerMode: true });
+            return null;
+          }
+
+          if (res.status === 429) {
+            return "Terlalu banyak percobaan. Coba lagi nanti.";
+          }
+
+          return "PIN salah";
+        } catch {
+          return "Gagal terhubung ke server";
         }
-        set({ failedAttempts: get().failedAttempts + 1 });
-        return "PIN salah";
       },
-      logout: () => set({ ownerMode: false, failedAttempts: 0 }),
+      logout: async () => {
+        try {
+          await fetch("/api/auth/logout", { method: "POST" });
+        } catch {
+          // State lokal tetap dikosongkan meski request gagal.
+        }
+        set({ ownerMode: false });
+      },
+      refresh: async () => {
+        try {
+          const res = await fetch("/api/auth/session", { cache: "no-store" });
+          const data = (await res.json()) as { authenticated?: boolean };
+          set({ ownerMode: Boolean(data.authenticated), checking: false });
+        } catch {
+          set({ ownerMode: false, checking: false });
+        }
+      },
     }),
-    { name: "portfolio-owner", partialize: (s) => ({ ownerMode: s.ownerMode }) as OwnerState }
+    {
+      name: "portfolio-owner",
+      partialize: (s) => ({ ownerMode: s.ownerMode }) as OwnerState,
+    }
   )
 );

@@ -64,7 +64,7 @@ portofolio-app/
 
 ## 🔐 Owner Mode (CMS)
 
-Aktifkan dengan tombol **Masuk** di navbar → PIN: `1234` (default, ganti via `NEXT_PUBLIC_OWNER_PIN` di `.env`).
+Aktifkan dengan tombol **Masuk** di navbar → masukkan PIN dari `ADMIN_PIN` di `.env.local`. Sesi disimpan sebagai cookie HttpOnly bertanda tangan; PIN tidak pernah dikirim ke browser.
 
 Fitur:
 - ✏️ Edit profil (nama, role, bio, lokasi, email, ketersediaan, links, foto)
@@ -84,11 +84,13 @@ DATABASE_URL="postgresql://user:pass@localhost:5432/portofolio"
 # Next.js
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
 
-# Owner PIN (ganti untuk production!)
-NEXT_PUBLIC_OWNER_PIN="1234"
+# Admin (server-only — jangan pakai prefix NEXT_PUBLIC_)
+ADMIN_PIN="123456"
+# Buat dengan: openssl rand -hex 32 (minimal 32 karakter)
+ADMIN_SESSION_SECRET=""
 ```
 
-> ⚠️ **Jangan commit PIN asli** ke repo. Gunakan `.env` lokal atau Vercel dashboard untuk production.
+> ⚠️ **Jangan commit `ADMIN_PIN` / `ADMIN_SESSION_SECRET` asli** ke repo. Gunakan `.env.local` atau Vercel dashboard untuk production.
 
 ## 🛠️ Tech Stack
 

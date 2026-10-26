@@ -8,7 +8,6 @@ import {
   validateProjectInput,
   validateProfileInput,
   validateProfileUrls,
-  checkOwnerPin,
 } from "./portfolio.ts";
 
 describe("parseTechStack", () => {
@@ -62,12 +61,6 @@ describe("validateProfileInput", () => {
       availability: "Tersedia",
     });
     assert.ok(errs.some((e) => e.toLowerCase().includes("email")));
-  });
-});
-
-describe("checkOwnerPin", () => {
-  it("PIN salah ditolak", () => {
-    assert.equal(checkOwnerPin("0000"), false);
   });
 });
 

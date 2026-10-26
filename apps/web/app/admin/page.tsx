@@ -10,6 +10,8 @@ import { ProjectsSection } from '../components/ProjectsSection'
 export default function AdminPage() {
   const router = useRouter()
   const ownerMode = useOwnerStore((s) => s.ownerMode)
+  const checking = useOwnerStore((s) => s.checking)
+  const refresh = useOwnerStore((s) => s.refresh)
   const logout = useOwnerStore((s) => s.logout)
   const [mounted, setMounted] = useState(false)
   const { showToast } = useToast()
@@ -17,15 +19,19 @@ export default function AdminPage() {
   useEffect(() => { setMounted(true) }, [])
 
   useEffect(() => {
-    if (mounted && !ownerMode) {
+    if (mounted) void refresh()
+  }, [mounted, refresh])
+
+  useEffect(() => {
+    if (mounted && !checking && !ownerMode) {
       router.push('/')
     }
-  }, [mounted, ownerMode, router])
+  }, [mounted, checking, ownerMode, router])
 
-  if (!mounted || !ownerMode) return null
+  if (!mounted || checking || !ownerMode) return null
 
-  const handleLogout = () => {
-    logout()
+  const handleLogout = async () => {
+    await logout()
     showToast('Keluar dari mode pemilik', 'info')
     router.push('/')
   }
@@ -43,7 +49,7 @@ export default function AdminPage() {
           </div>
           <p className="text-muted-foreground">Kelola profil dan proyek Anda.</p>
         </div>
-        <button onClick={handleLogout} className="rounded-md border border-gray-700 px-4 py-2 text-sm hover:bg-gray-800">
+        <button onClick={() => void handleLogout()} className="rounded-md border border-gray-700 px-4 py-2 text-sm hover:bg-gray-800">
           Keluar
         </button>
       </div>

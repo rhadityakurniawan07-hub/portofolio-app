@@ -86,11 +86,6 @@ export function validateProjectInput(v: {
   return errs;
 }
 
-export function checkOwnerPin(input: string): boolean {
-  const expected = (process.env.NEXT_PUBLIC_OWNER_PIN ?? "1234").trim();
-  return input.trim() === expected;
-}
-
 export function newProjectId(): string {
   try {
     return crypto.randomUUID();

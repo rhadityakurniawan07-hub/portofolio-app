@@ -8,6 +8,17 @@ interface ContactFormProps {
   className?: string;
 }
 
+type ContactResponse = {
+  success?: boolean;
+  saved?: boolean;
+  delivered?:
+    | boolean
+    | { email?: boolean; whatsapp?: boolean };
+  message?: string;
+  error?: string;
+  errors?: Record<string, string[]>;
+};
+
 export function ContactForm({ className }: ContactFormProps) {
   const { showToast } = useToast();
   const [formData, setFormData] = useState({
@@ -15,10 +26,14 @@ export function ContactForm({ className }: ContactFormProps) {
     email: "",
     subject: "",
     message: "",
+    honeypot: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+  const [feedback, setFeedback] = useState<{
+    type: "success" | "info" | "error";
+    message: string;
+  } | null>(null);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -46,7 +61,7 @@ export function ContactForm({ className }: ContactFormProps) {
     if (!validateForm()) return;
 
     setIsSubmitting(true);
-    setSubmitStatus("idle");
+    setFeedback(null);
 
     try {
       const res = await fetch("/api/contact", {
@@ -57,21 +72,40 @@ export function ContactForm({ className }: ContactFormProps) {
           email: formData.email.trim(),
           subject: formData.subject.trim(),
           message: formData.message.trim(),
+          honeypot: formData.honeypot,
         }),
       });
 
-      const data = await res.json();
+      const data = (await res.json()) as ContactResponse;
 
       if (!res.ok) {
-        throw new Error(data.error || "Gagal mengirim pesan");
+        const fieldError = data.errors
+          ? Object.values(data.errors).flat()[0]
+          : undefined;
+        throw new Error(data.error || fieldError || "Gagal mengirim pesan");
       }
 
-      setSubmitStatus("success");
-      setFormData({ name: "", email: "", subject: "", message: "" });
-      showToast("Pesan terkirim! Kami akan membalas segera.", "success");
+      const delivered = data.delivered;
+      const anyDelivered =
+        typeof delivered === "object"
+          ? Boolean(delivered.email || delivered.whatsapp)
+          : delivered === true;
+
+      const message =
+        data.message ||
+        (anyDelivered
+          ? "Pesan terkirim. Kami akan membalas segera."
+          : "Pesan tersimpan, tetapi notifikasi belum terkirim.");
+
+      setFeedback({
+        type: anyDelivered ? "success" : "info",
+        message,
+      });
+      setFormData({ name: "", email: "", subject: "", message: "", honeypot: "" });
+      showToast(message, anyDelivered ? "success" : "info");
     } catch (error) {
       const message = error instanceof Error ? error.message : "Gagal mengirim pesan";
-      setSubmitStatus("error");
+      setFeedback({ type: "error", message });
       showToast(message, "error");
     } finally {
       setIsSubmitting(false);
@@ -200,6 +234,35 @@ export function ContactForm({ className }: ContactFormProps) {
             </p>
           )}
         </div>
+
+        <div className="absolute left-[-9999px] top-0 h-0 w-0 overflow-hidden" aria-hidden="true">
+          <label htmlFor="website">Website</label>
+          <input
+            id="website"
+            name="honeypot"
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            value={formData.honeypot}
+            onChange={handleChange}
+          />
+        </div>
+
+        {feedback && (
+          <p
+            role="status"
+            aria-live="polite"
+            className={`text-sm ${
+              feedback.type === "success"
+                ? "text-green-400"
+                : feedback.type === "info"
+                  ? "text-yellow-400"
+                  : "text-red-400"
+            }`}
+          >
+            {feedback.message}
+          </p>
+        )}
 
         <div className="pt-4">
           <button

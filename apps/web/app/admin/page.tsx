@@ -6,6 +6,7 @@ import { useOwnerStore } from '@/stores/use-owner'
 import { useToast } from '@/components/Toast'
 import { ProfileEditPanel } from '../components/ProfileEditPanel'
 import { ProjectsSection } from '../components/ProjectsSection'
+import { usePortfolioData } from '@/hooks/use-portfolio-data'
 
 export default function AdminPage() {
   const router = useRouter()
@@ -14,6 +15,7 @@ export default function AdminPage() {
   const refresh = useOwnerStore((s) => s.refresh)
   const logout = useOwnerStore((s) => s.logout)
   const [mounted, setMounted] = useState(false)
+  const { loading: dataLoading } = usePortfolioData()
   const { showToast } = useToast()
 
   useEffect(() => { setMounted(true) }, [])
@@ -29,6 +31,9 @@ export default function AdminPage() {
   }, [mounted, checking, ownerMode, router])
 
   if (!mounted || checking || !ownerMode) return null
+  if (dataLoading) {
+    return <div className="container py-12 text-sm text-muted-foreground">Memuat data...</div>
+  }
 
   const handleLogout = async () => {
     await logout()

@@ -8,6 +8,7 @@ export type Profile = typeof profileData;
 interface ProfileState {
   profile: Profile;
   updateProfile: (p: Partial<Profile>) => void;
+  replaceProfile: (profile: Profile) => void;
   resetProfile: () => void;
 }
 
@@ -17,6 +18,7 @@ export const useProfileStore = create<ProfileState>()(
       profile: profileData,
       updateProfile: (p) =>
         set((s) => ({ profile: { ...s.profile, ...p } })),
+      replaceProfile: (profile) => set({ profile }),
       resetProfile: () => set({ profile: profileData }),
     }),
     {

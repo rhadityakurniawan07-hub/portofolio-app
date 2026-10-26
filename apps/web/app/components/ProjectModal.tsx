@@ -4,11 +4,12 @@ import { Modal } from "@repo/ui/modal";
 import { useProjectsStore } from "@/stores/use-projects";
 import { useToast } from "@/components/Toast";
 import { parseTechStack, normalizeUrl, validateProjectInput } from "@/lib/portfolio";
+import { mapProjectRecord } from "@/lib/mappers";
 
 export function ProjectModal({ open, onClose, editingId }: { open: boolean; onClose: () => void; editingId?: number | string | null }) {
   const projects = useProjectsStore((s) => s.projects);
-  const addProject = useProjectsStore((s) => s.addProject);
   const updateProject = useProjectsStore((s) => s.updateProject);
+  const replaceProjects = useProjectsStore((s) => s.replaceProjects);
   const { showToast } = useToast();
   const editing = editingId != null ? projects.find((p) => p.id === editingId) : undefined;
 
@@ -37,66 +38,54 @@ const save = async () => {
       setErrors(errs);
       return;
     }
+    const projectUrl = link.trim() ? normalizeUrl(link) : "";
     const payload = {
       title,
       description,
       techStack,
       year,
-      link,
+      link: projectUrl,
       githubUrl: "",
       category: "Online",
       status: "Production",
       featured: false,
     };
     try {
-      if (editing) {
-        updateProject(editing.id, { title, description, techStack, year, projectUrl: link });
-        showToast("Proyek masih diperbarui", "success");
-        // Persist ke database (Prisma) — lapisan tambahan
-        try {
-          const res = await fetch('/api/projects?id=' + encodeURIComponent(editing.id), {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-          });
-          if (!res.ok) {
-            const data = await res.json().catch(() => ({}));
-            showToast('Gagal simpan ke database: ' + (data.error || 'Status ' + res.status), 'error');
-          }
-        } catch {
-          showToast('Gagal kirim ke database (cek koneksi)', 'error');
+      const res = await fetch(
+        editing
+          ? '/api/projects?id=' + encodeURIComponent(editing.id)
+          : '/api/projects',
+        {
+          method: editing ? 'PUT' : 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
         }
-      } else {
-        addProject({
-          title,
-          description,
-          techStack,
-          year,
-          category: "Online",
-          status: "Production",
-          projectUrl: link,
-          githubUrl: "",
-          featured: false,
-        } as unknown as Parameters<typeof addProject>[0]);
-        showToast("Proyek masih disimpan", "success");
-        // Persist ke database (Prisma) — lapisan tambahan
-        try {
-          const res = await fetch('/api/projects', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-          });
-          if (!res.ok) {
-            const data = await res.json().catch(() => ({}));
-            showToast('Gagal simpan ke database: ' + (data.error || 'Status ' + res.status), 'error');
-          }
-        } catch {
-          showToast('Gagal kirim ke database (cek koneksi)', 'error');
-        }
+      );
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const apiErrors = Array.isArray(data.errors)
+          ? data.errors
+          : [data.error || 'Status ' + res.status];
+        setErrors(apiErrors);
+        showToast('Gagal menyimpan proyek ke database', 'error');
+        return;
       }
+      if (!data.project) {
+        throw new Error('Respons server tidak berisi proyek');
+      }
+
+      const saved = mapProjectRecord(data.project);
+      if (editing) {
+        updateProject(editing.id, saved);
+      } else {
+        replaceProjects([saved, ...projects]);
+      }
+      setErrors([]);
+      showToast(editing ? "Perubahan proyek tersimpan" : "Proyek tersimpan", "success");
       onClose();
-    } catch {
-      showToast('Gagal menyimpan ke penyimpanan browser', 'error');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Gagal menyimpan proyek';
+      showToast(message, 'error');
     }
   };
 

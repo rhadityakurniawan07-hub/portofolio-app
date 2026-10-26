@@ -5,6 +5,7 @@ import {
   parseTechStack,
   parseDaftar,
   normalizeUrl,
+  normalizeWhatsAppUrl,
   validateProjectInput,
   validateProfileInput,
   validateProfileUrls,
@@ -73,14 +74,57 @@ describe("parseDaftar", () => {
   });
 });
 
+describe("normalizeWhatsAppUrl", () => {
+  it("membersihkan spasi dan tanda hubung pada wa.me", () => {
+    assert.equal(
+      normalizeWhatsAppUrl("https://wa.me/62881-0123-09481"),
+      "https://wa.me/62881012309481"
+    );
+  });
+  it("mengubah nomor lokal 08 menjadi format internasional 62", () => {
+    assert.equal(
+      normalizeWhatsAppUrl("0812-3456-7890"),
+      "https://wa.me/6281234567890"
+    );
+  });
+  it("mengubah nomor tanpa awalan 0 menjadi format 62", () => {
+    assert.equal(
+      normalizeWhatsAppUrl("81234567890"),
+      "https://wa.me/6281234567890"
+    );
+  });
+  it("kosong tetap kosong", () => {
+    assert.equal(normalizeWhatsAppUrl("   "), "");
+  });
+});
+
 describe("validateProfileUrls", () => {
   it("kosong boleh, tanpa protokol tetap valid", () => {
     assert.deepEqual(validateProfileUrls({ github: "", telegram: "", whatsapp: "" }), []);
     assert.deepEqual(validateProfileUrls({ github: "github.com/fatih", telegram: "t.me/fatih", whatsapp: "" }), []);
+    assert.deepEqual(
+      validateProfileUrls({ github: "", telegram: "", whatsapp: "62881012309481" }),
+      []
+    );
   });
   it("menolak URL yang tidak valid", () => {
     const errs = validateProfileUrls({ github: "http://", telegram: "", whatsapp: "" });
     assert.ok(errs.some((e) => e.includes("GitHub")));
+  });
+  it("menolak tautan WhatsApp yang bukan wa.me atau nomornya tidak valid", () => {
+    const errs = validateProfileUrls({
+      github: "",
+      telegram: "",
+      whatsapp: "https://example.com/chat",
+    });
+    assert.ok(errs.some((e) => e.includes("WhatsApp")));
+
+    const badNumber = validateProfileUrls({
+      github: "",
+      telegram: "",
+      whatsapp: "https://wa.me/abc",
+    });
+    assert.ok(badNumber.some((e) => e.includes("WhatsApp")));
   });
   it("foto profil opsional tapi harus URL valid bila diisi", async () => {
     const { validateOptionalUrl } = await import("./portfolio.ts");

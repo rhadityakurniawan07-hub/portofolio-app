@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@repo/database";
-import { validateProfileInput } from "@/lib/portfolio";
+import {
+  normalizeWhatsAppUrl,
+  validateProfileInput,
+  validateWhatsAppUrl,
+} from "@/lib/portfolio";
 import { requireAdmin } from "@/lib/auth";
 
 export async function GET() {
@@ -52,14 +56,17 @@ export async function PUT(req: NextRequest) {
     } = body;
 
     // Validasi
-    const errs = validateProfileInput({
-      fullName: fullName ?? "",
-      role: role ?? "",
-      bio: bio ?? "",
-      location: location ?? "",
-      email: email ?? "",
-      availability: availability ?? "",
-    });
+    const errs = [
+      ...validateProfileInput({
+        fullName: fullName ?? "",
+        role: role ?? "",
+        bio: bio ?? "",
+        location: location ?? "",
+        email: email ?? "",
+        availability: availability ?? "",
+      }),
+      ...validateWhatsAppUrl(whatsapp ?? ""),
+    ];
 
     if (errs.length > 0) {
       return NextResponse.json({ errors: errs }, { status: 400 });
@@ -96,7 +103,7 @@ export async function PUT(req: NextRequest) {
           github,
           linkedin,
           twitter,
-          whatsapp,
+          whatsapp: normalizeWhatsAppUrl(whatsapp ?? ""),
           telegram,
           skills: specializations ?? [],
           languages: languages ?? [],
@@ -120,7 +127,7 @@ export async function PUT(req: NextRequest) {
           github,
           linkedin,
           twitter,
-          whatsapp,
+          whatsapp: normalizeWhatsAppUrl(whatsapp ?? ""),
           telegram,
           skills: specializations ?? [],
           languages: languages ?? [],

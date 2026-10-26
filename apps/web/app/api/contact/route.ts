@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@repo/database";
 import { requireAdmin } from "@/lib/auth";
+import {
+  buildDeliveryResult,
+  sendContactEmail,
+  sendWhatsAppNotification,
+} from "@/lib/contact-notify";
 
 const contactSchema = z.object({
   name: z.string().min(2, "Nama minimal 2 karakter"),
@@ -65,68 +70,46 @@ export async function POST(req: NextRequest) {
     }
 
     const { name, email, subject, message } = parsed.data;
+    const payload = { name, email, subject, message };
 
-    // Simpan ke database (Prisma) — lapisan persistensi, tidak menggantikan email
+    // Database adalah sumber kebenaran: jangan klaim sukses bila pesan gagal disimpan.
     try {
       await prisma.contactMessage.create({
-        data: { name, email, subject, message },
+        data: payload,
       });
     } catch (dbErr) {
       console.error("[API] Gagal simpan ContactMessage ke DB:", dbErr);
-      // Tidak menghentikan alur — email masih akan dikirim (jika API key ada)
-    }
-
-    const resendApiKey = process.env.RESEND_API_KEY;
-    const contactTo = process.env.CONTACT_TO_EMAIL;
-    const contactFrom =
-      process.env.CONTACT_FROM_EMAIL ?? "Portofolio <onboarding@resend.dev>";
-
-    // Tanpa API key: mode dev — catat log saja agar form tetap bisa dicoba lokal.
-    if (!resendApiKey || !contactTo) {
-      console.log("[CONTACT] (dev fallback, tanpa RESEND_API_KEY) Pesan baru:", {
-        name,
-        email,
-        subject,
-        message,
-      });
       return NextResponse.json(
         {
-          success: true,
-          delivered: false,
-          message: "Pesan tercatat (mode dev — atur RESEND_API_KEY agar terkirim via email).",
+          success: false,
+          saved: false,
+          error: "Pesan gagal disimpan. Coba lagi nanti.",
         },
-        { status: 200 }
+        { status: 500 }
       );
     }
 
-    const resendRes = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${resendApiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from: contactFrom,
-        to: [contactTo],
-        replyTo: email,
-        subject: `[Portofolio] ${subject} — dari ${name}`,
-        text: `Nama: ${name}\nEmail: ${email}\n\n${message}`,
-      }),
-    });
+    const [emailResult, whatsappResult] = await Promise.allSettled([
+      sendContactEmail(payload),
+      sendWhatsAppNotification(payload),
+    ]);
 
-    if (!resendRes.ok) {
-      const detail = await resendRes.text().catch(() => "");
-      console.error("[API] Resend gagal:", resendRes.status, detail);
-      return NextResponse.json(
-        { error: "Gagal mengirim email. Coba lagi nanti." },
-        { status: 502 }
-      );
+    const delivered = {
+      email:
+        emailResult.status === "fulfilled" && emailResult.value.ok === true,
+      whatsapp:
+        whatsappResult.status === "fulfilled" &&
+        whatsappResult.value.ok === true,
+    };
+
+    if (emailResult.status === "fulfilled" && emailResult.value.error) {
+      console.error("[CONTACT] Email:", emailResult.value.error);
+    }
+    if (whatsappResult.status === "fulfilled" && whatsappResult.value.error) {
+      console.error("[CONTACT] WhatsApp:", whatsappResult.value.error);
     }
 
-    return NextResponse.json(
-      { success: true, delivered: true, message: "Pesan terkirim. Kami akan membalas segera." },
-      { status: 200 }
-    );
+    return NextResponse.json(buildDeliveryResult(delivered), { status: 200 });
   } catch (error) {
     console.error("[API] POST /api/contact error:", error);
     return NextResponse.json(

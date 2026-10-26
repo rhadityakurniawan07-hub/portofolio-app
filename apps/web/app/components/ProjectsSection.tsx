@@ -54,11 +54,13 @@ export function ProjectsSection() {
       );
     }
     result = [...result].sort((a, b) => {
+      const time = (project: Project) =>
+        project.createdAt ? new Date(project.createdAt).getTime() : 0;
       switch (sortBy) {
         case "newest":
-          return String(b.id).localeCompare(String(a.id));
+          return time(b) - time(a) || a.title.localeCompare(b.title);
         case "oldest":
-          return String(a.id).localeCompare(String(b.id));
+          return time(a) - time(b) || a.title.localeCompare(b.title);
         case "az":
           return a.title.localeCompare(b.title);
         case "category":
@@ -80,14 +82,23 @@ export function ProjectsSection() {
     setSortBy("newest");
   };
 
-  const handleDelete = () => {
-    if (deleteId != null) {
+  const handleDelete = async () => {
+    if (deleteId == null) return;
+
+    try {
+      const res = await fetch('/api/projects?id=' + encodeURIComponent(deleteId), {
+        method: 'DELETE',
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data.error || 'Gagal menghapus proyek');
+      }
       removeProject(deleteId);
       showToast("Proyek dihapus", "success");
-      // Persist ke database (Prisma) — lapisan tambahan
-      fetch('/api/projects?id=' + encodeURIComponent(deleteId), { method: 'DELETE' })
-        .catch(() => { /* toast tidak perlu, hapus sudah terjadi di localStorage */ });
       setDeleteId(null);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Gagal menghapus proyek';
+      showToast(message, 'error');
     }
   };
 

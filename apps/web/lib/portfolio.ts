@@ -22,6 +22,15 @@ export function validateOptionalUrl(label: string, value: string): string[] {
   }
 }
 
+export function validateWhatsAppUrl(value: string): string[] {
+  if (!value.trim()) return [];
+  const normalized = normalizeWhatsAppUrl(value);
+  if (!/^https:\/\/wa\.me\/\d{8,15}$/.test(normalized)) {
+    return ["WhatsApp tidak valid"];
+  }
+  return [];
+}
+
 export function validateProfileUrls(v: {
   github: string;
   telegram: string;
@@ -30,7 +39,7 @@ export function validateProfileUrls(v: {
   return [
     ...validateOptionalUrl("GitHub", v.github),
     ...validateOptionalUrl("Telegram", v.telegram),
-    ...validateOptionalUrl("WhatsApp", v.whatsapp),
+    ...validateWhatsAppUrl(v.whatsapp),
   ];
 }
 
@@ -39,6 +48,19 @@ export function normalizeUrl(input: string): string {
   if (!v) return "";
   if (/^https?:\/\//i.test(v)) return v;
   return `https://${v}`;
+}
+
+export function normalizeWhatsAppUrl(input: string): string {
+  const v = input.trim();
+  if (!v) return "";
+  const digits = v.replace(/\D/g, "");
+  if (!digits) return "";
+  const phone = digits.startsWith("0")
+    ? `62${digits.slice(1)}`
+    : digits.startsWith("8")
+      ? `62${digits}`
+      : digits;
+  return `https://wa.me/${phone}`;
 }
 
 function isValidUrl(v: string): boolean {

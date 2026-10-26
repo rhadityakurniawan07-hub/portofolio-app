@@ -1,5 +1,5 @@
 export interface Project {
-  id: number;
+  id: number | string;
   title: string;
   description: string;
   techStack: string[];
@@ -9,6 +9,7 @@ export interface Project {
   projectUrl: string;
   githubUrl: string;
   featured: boolean;
+  createdAt?: string;
 }
 
 export interface Profile {
@@ -33,11 +34,13 @@ export interface Profile {
   languages: string[];
 }
 
-export const profileData = {
+export const profileData: Profile = {
   name: "MUHAMMAD RHADITYA KURNIAWAN",
   role: "Full-Stack Web Developer",
   bio: "Programmer yang berfokus mengembangkan aplikasi web fungsional, bersih, dan bermanfaat.",
   longBio: "Saya adalah seorang programmer pemula",
+  tagline: "Next.js • Node.js • Tailwind CSS",
+  location: "Krenji, BEKASI",
   availability: "Terbuka untuk freelance & full-time",
   availabilityStatus: "available",
   email: "hannifah1220@gmail.com",
@@ -47,7 +50,7 @@ export const profileData = {
   github: "https://github.com/rhadityakurniawan07-hub",
   linkedin: "",
   twitter: "",
-  whatsapp: "https://wa.me/62881-0123-09481",
+  whatsapp: "https://wa.me/62881012309481",
   telegram: "",
   specializations: [
     "Next.js",

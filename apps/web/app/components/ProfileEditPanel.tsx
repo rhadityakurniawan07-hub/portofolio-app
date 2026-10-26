@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { useProfileStore } from '@/stores/use-profile'
 import { useToast } from '@/components/Toast'
-import { parseDaftar, normalizeUrl, validateProfileInput, validateProfileUrls, validateOptionalUrl } from '@/lib/portfolio'
+import { parseDaftar, normalizeUrl, normalizeWhatsAppUrl, validateProfileInput, validateProfileUrls, validateOptionalUrl } from '@/lib/portfolio'
+import { mapProfileRecord } from '@/lib/mappers'
 import { downscaleImage } from '@/lib/photo'
 
 export function ProfileEditPanel() {
@@ -23,7 +24,7 @@ export function ProfileEditPanel() {
     setSpecInput(profile.specializations.join(', '))
     setLangInput(profile.languages.join(', '))
     setErrors([])
-  }, [profile.name, profile.specializations, profile.languages])
+  }, [profile])
 
   const photoValue = (form.photoUrl ?? '').trim()
   const aboutPhotoValue = (form.aboutPhotoUrl ?? '').trim()
@@ -62,59 +63,65 @@ export function ProfileEditPanel() {
       setErrors(errs)
       return
     }
-    try {
-      updateProfile({
-        ...form,
-        specializations: parseDaftar(specInput),
-        languages: parseDaftar(langInput),
-        github: form.github.trim() ? normalizeUrl(form.github) : form.github,
-        telegram: form.telegram.trim() ? normalizeUrl(form.telegram) : form.telegram,
-        whatsapp: form.whatsapp.trim() ? normalizeUrl(form.whatsapp) : form.whatsapp,
-        photoUrl: photoValue.startsWith('data:') ? photoValue : photoValue ? normalizeUrl(photoValue) : '',
-        aboutPhotoUrl: aboutPhotoValue.startsWith('data:') ? aboutPhotoValue : aboutPhotoValue ? normalizeUrl(aboutPhotoValue) : '',
-      })
-    } catch {
-      setErrors([
-        'Gagal menyimpan ke penyimpanan browser. Penyimpanan mungkin penuh — hapus foto lama atau gunakan foto yang lebih kecil, lalu coba lagi.',
-      ])
-      showToast('Gagal menyimpan: penyimpanan browser mungkin penuh', 'error')
-      return
+
+    const normalized = {
+      ...form,
+      specializations: parseDaftar(specInput),
+      languages: parseDaftar(langInput),
+      github: form.github.trim() ? normalizeUrl(form.github) : form.github,
+      telegram: form.telegram.trim() ? normalizeUrl(form.telegram) : form.telegram,
+      whatsapp: normalizeWhatsAppUrl(form.whatsapp),
+      photoUrl: photoValue.startsWith('data:') ? photoValue : photoValue ? normalizeUrl(photoValue) : '',
+      aboutPhotoUrl: aboutPhotoValue.startsWith('data:') ? aboutPhotoValue : aboutPhotoValue ? normalizeUrl(aboutPhotoValue) : '',
     }
-    // Persist ke database (Prisma) — tidak menggantikan localStorage, hanya lapisan tambahan
+
     try {
       const res = await fetch('/api/profile', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          fullName: form.name,
-          role: form.role,
-          bio: form.bio,
-          longBio: form.longBio,
-          location: form.location,
-          email: form.email,
-          availability: form.availability,
-          availabilityStatus: form.availabilityStatus,
-          phone: form.phone,
-          photoUrl: photoValue.startsWith('data:') ? photoValue : photoValue ? normalizeUrl(photoValue) : '',
-          aboutPhotoUrl: aboutPhotoValue.startsWith('data:') ? aboutPhotoValue : aboutPhotoValue ? normalizeUrl(aboutPhotoValue) : '',
-          github: form.github.trim() ? normalizeUrl(form.github) : form.github,
-          linkedin: form.linkedin,
-          twitter: form.twitter,
-          whatsapp: form.whatsapp.trim() ? normalizeUrl(form.whatsapp) : form.whatsapp,
-          telegram: form.telegram.trim() ? normalizeUrl(form.telegram) : form.telegram,
-          specializations: parseDaftar(specInput),
-          languages: parseDaftar(langInput),
+          fullName: normalized.name,
+          role: normalized.role,
+          bio: normalized.bio,
+          longBio: normalized.longBio,
+          location: normalized.location,
+          email: normalized.email,
+          availability: normalized.availability,
+          availabilityStatus: normalized.availabilityStatus,
+          phone: normalized.phone,
+          photoUrl: normalized.photoUrl,
+          aboutPhotoUrl: normalized.aboutPhotoUrl,
+          github: normalized.github,
+          linkedin: normalized.linkedin,
+          twitter: normalized.twitter,
+          whatsapp: normalized.whatsapp,
+          telegram: normalized.telegram,
+          specializations: normalized.specializations,
+          languages: normalized.languages,
         }),
       })
+      const data = await res.json().catch(() => ({}))
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
-        showToast('Gagal simpan ke database: ' + (data.error || 'Status ' + res.status), 'error')
+        const apiErrors = Array.isArray(data.errors)
+          ? data.errors
+          : [data.error || 'Status ' + res.status]
+        setErrors(apiErrors)
+        showToast('Gagal menyimpan ke database', 'error')
+        return
       }
+
+      const saved = data.profile ? mapProfileRecord(data.profile) : normalized
+      try {
+        updateProfile(saved)
+      } catch {
+        showToast('Tersimpan di database, tetapi cache browser penuh. Muat ulang halaman.', 'error')
+        return
+      }
+      setErrors([])
+      showToast('Perubahan tersimpan', 'success')
     } catch {
-      showToast('Gagal kirim ke database (cek koneksi)', 'error')
+      showToast('Gagal menyimpan (cek koneksi database)', 'error')
     }
-    setErrors([])
-    showToast('Data masih diperbarui', 'success')
   }
 
   const field = 'w-full rounded-md border border-gray-700 bg-gray-900/50 px-3 py-2.5 text-sm focus:border-red-600 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-black'

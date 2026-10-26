@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@repo/database";
-import { validateProjectInput, parseTechStack } from "@/lib/portfolio";
+import { validateProjectInput, parseTechStack, normalizeUrl } from "@/lib/portfolio";
 import { requireAdmin } from "@/lib/auth";
 
 export async function GET() {
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
         title: body.title,
         description: body.description,
         techStack,
-        projectUrl: body.link ?? "",
+        projectUrl: normalizeUrl(body.link ?? ""),
         githubUrl: body.githubUrl ?? "",
         year: body.year,
         category: body.category ?? "Online",
@@ -100,7 +100,7 @@ export async function PUT(req: NextRequest) {
         title: body.title,
         description: body.description,
         techStack,
-        projectUrl: body.link ?? "",
+        projectUrl: normalizeUrl(body.link ?? ""),
         githubUrl: body.githubUrl ?? "",
         year: body.year,
         category: body.category ?? "Online",

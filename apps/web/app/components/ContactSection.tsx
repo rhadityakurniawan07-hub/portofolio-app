@@ -2,7 +2,7 @@
 
 import { Mail, MapPin, MessageSquare, Github } from "lucide-react";
 import { useProfileStore } from "@/stores/use-profile";
-import { ContactForm } from "./ContactForm";
+
 
 export function ContactSection() {
   const profile = useProfileStore((s) => s.profile);
@@ -13,7 +13,7 @@ export function ContactSection() {
         <header className="mb-12 text-center">
           <p className="mb-2 text-xs font-mono uppercase tracking-wider text-primary">HUBUNGI SAYA</p>
           <h2 id="contact-heading" className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground mb-4">Hubungi Saya</h2>
-          <p className="text-muted-foreground text-lg max-w-xl mx-auto">Tertarik kerja sama, punya proyek, atau hanya ingin menyapa? Kirim pesan lewat form di bawah atau hubungi lewat kontak di bawah.</p>
+          <p className="text-muted-foreground text-lg max-w-xl mx-auto">Tertarik kerja sama, punya proyek, atau hanya ingin menyapa? Hubungi lewat kontak di bawah.</p>
         </header>
 
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16">
@@ -75,7 +75,13 @@ export function ContactSection() {
 
           <section>
             <h3 className="font-mono text-xs uppercase tracking-wider text-primary mb-6">KIRIM PESAN</h3>
-            <ContactForm />
+            <p className="text-muted-foreground mb-6">Untuk kerja sama atau proyek, hubungi langsung lewat email atau WhatsApp.</p>
+            <div className="flex flex-col gap-3">
+              <a href={`mailto:${profile.email}`} className="inline-flex items-center justify-center rounded-md border border-gray-700 px-4 py-3 text-sm font-medium text-foreground hover:border-primary hover:text-primary transition-colors">Kirim Email</a>
+              {profile.whatsapp && (
+                <a href={profile.whatsapp} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-md border border-gray-700 px-4 py-3 text-sm font-medium text-foreground hover:border-primary hover:text-primary transition-colors">Chat WhatsApp</a>
+              )}
+            </div>
           </section>
         </div>
       </div>

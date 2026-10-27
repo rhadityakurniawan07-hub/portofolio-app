@@ -19,6 +19,10 @@ export function ProjectModal({ open, onClose, editingId }: { open: boolean; onCl
   const [link, setLink] = useState("");
   const [year, setYear] = useState("");
   const [errors, setErrors] = useState<string[]>([]);
+  const [githubUrl, setGithubUrl] = useState("");
+  const [category, setCategory] = useState("Online");
+  const [status, setStatus] = useState("Production");
+  const [featured, setFeatured] = useState(false);
 
   useEffect(() => {
     if (open) {
@@ -27,9 +31,13 @@ export function ProjectModal({ open, onClose, editingId }: { open: boolean; onCl
       setTech(editing?.techStack.join(", ") ?? "");
       setLink(editing?.projectUrl ?? "");
       setYear(editing?.year ?? "");
+      setGithubUrl(editing?.githubUrl ?? "");
+      setCategory(editing?.category ?? "Online");
+      setStatus(editing?.status ?? "Production");
+      setFeatured(editing?.featured ?? false);
       setErrors([]);
     }
-  }, [open, editing?.title, editing?.description, editing?.techStack, editing?.projectUrl, editing?.year]);
+  }, [open, editing?.title, editing?.description, editing?.techStack, editing?.projectUrl, editing?.year, editing?.githubUrl, editing?.category, editing?.status, editing?.featured]);
 
 const save = async () => {
     const techStack = tech.split(",").map(t => t.trim()).filter(Boolean);
@@ -45,10 +53,10 @@ const save = async () => {
       techStack,
       year,
       link: projectUrl,
-      githubUrl: "",
-      category: "Online",
-      status: "Production",
-      featured: false,
+      githubUrl: githubUrl.trim(),
+      category,
+      status,
+      featured,
     };
     try {
       const res = await fetch(
@@ -124,6 +132,10 @@ const save = async () => {
           <input id="pj-tech" className={field} value={tech} onChange={(e) => setTech(e.target.value)} placeholder="Next.js, Node.js" aria-describedby="pj-tech-help" />
           <p id="pj-tech-help" className="mt-1 text-xs text-muted-foreground">Pisahkan dengan koma (,)</p>
         </div>
+          <div>
+            <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-1 block" htmlFor="pj-github">TAUTAN GITHUB</label>
+            <input id="pj-github" className={field} value={githubUrl} onChange={(e) => setGithubUrl(e.target.value)} placeholder="https://github.com/..." />
+          </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-1 block" htmlFor="pj-link">TAUTAN WEB / LINK PROYEK</label>

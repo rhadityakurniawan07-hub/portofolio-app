@@ -5,7 +5,7 @@ import {
   validateProfileInput,
   validateWhatsAppUrl,
 } from "@/lib/portfolio";
-import { requireAdmin } from "@/lib/auth";
+import { requireAdmin, isTrustedOrigin } from "@/lib/auth";
 
 export async function GET() {
   try {
@@ -30,6 +30,9 @@ export async function GET() {
 export async function PUT(req: NextRequest) {
   const unauthorized = requireAdmin(req);
   if (unauthorized) return unauthorized;
+  if (!isTrustedOrigin(req)) {
+    return NextResponse.json({ error: "Origin tidak diizinkan" }, { status: 403 });
+  }
 
   try {
     const body = await req.json();
@@ -72,21 +75,22 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ errors: errs }, { status: 400 });
     }
 
-    // Cek email unik
-    const existing = await prisma.profile.findUnique({ where: { email: email.trim() } });
     const currentProfile = await prisma.profile.findFirst({ orderBy: { updatedAt: "desc" } });
 
-    let profile;
-    if (existing && existing.id !== currentProfile?.id) {
-      return NextResponse.json(
-        { errors: ["Email sudah digunakan"] },
-        { status: 400 }
-      );
+    if (currentProfile && email.trim() !== currentProfile.email) {
+      const existing = await prisma.profile.findUnique({ where: { email: email.trim() } });
+      if (existing) {
+        return NextResponse.json(
+          { errors: ["Email sudah digunakan"] },
+          { status: 400 }
+        );
+      }
     }
 
-    if (existing) {
+    let profile;
+    if (currentProfile) {
       profile = await prisma.profile.update({
-        where: { id: existing.id },
+        where: { id: currentProfile.id },
         data: {
           fullName,
           role,

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ExternalLink, Github, ArrowLeft, Cpu, Code, Briefcase } from "lucide-react";
 import { useProjectsStore } from "@/stores/use-projects";
+import { usePortfolioData } from "@/hooks/use-portfolio-data";
 import { useOwnerStore } from "@/stores/use-owner";
 import { ProjectModal } from "../../components/ProjectModal";
 import { DeleteConfirm } from "../../components/DeleteConfirm";
@@ -13,6 +14,8 @@ export default function ProjectDetailPage() {
   const params = useParams();
   const id = params.id;
   const projects = useProjectsStore((s) => s.projects);
+  usePortfolioData();
+  usePortfolioData();
   const removeProject = useProjectsStore((s) => s.removeProject);
   const ownerMode = useOwnerStore((s) => s.ownerMode);
   const [modalOpen, setModalOpen] = useState(false);
@@ -142,6 +145,7 @@ export default function ProjectDetailPage() {
 
           {/* Action Buttons */}
           <div className="flex flex-wrap gap-3 pt-4 border-t border-gray-800">
+          {project.projectUrl && (
             <a
               href={project.projectUrl}
               target="_blank"
@@ -153,6 +157,7 @@ export default function ProjectDetailPage() {
               </svg>
               Buka Web Proyek
             </a>
+          )}
 
             {project.githubUrl && (
               <a

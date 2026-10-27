@@ -58,7 +58,7 @@ portofolio-app/
 - **Koleksi Proyek** — Grid proyek dengan search, filter kategori/tech stack, sorting
 - **Detail Proyek** — Halaman detail per proyek (`/projects/[id]`)
 - **CMS Admin** — Owner mode untuk edit profil & CRUD proyek (database + cache localStorage)
-- **Kontak** — Simpan pesan ke database, notifikasi email/WhatsApp, honeypot anti-spam
+- **Kontak** — Simpan pesan ke database dan honeypot anti-spam
 - **Backup/Restore** — Export/Import data JSON
 - **Dark Mode** — Tema slate/navy `#0F172A`
 - **Responsive** — Mobile-first, desktop 2-kolom
@@ -76,7 +76,7 @@ Fitur:
 
 ## ⚙️ Environment Variables
 
-Salin `.env.example` ke `.env` dan isi:
+Salin `.env.example` ke `apps/web/.env.local` dan isi:
 
 ```bash
 # Database
@@ -89,29 +89,13 @@ NEXT_PUBLIC_APP_URL="http://localhost:3000"
 ADMIN_PIN="123456"
 # Buat dengan: openssl rand -hex 32 (minimal 32 karakter)
 ADMIN_SESSION_SECRET=""
-
-# Email kontak (Resend)
-RESEND_API_KEY=""
-CONTACT_TO_EMAIL="kamu@contoh.id"
-CONTACT_FROM_EMAIL="Portofolio <onboarding@resend.dev>"
-
-# WhatsApp kontak (pilih salah satu provider)
-WHATSAPP_PROVIDER="callmebot" # atau "fonnte"
-CALLMEBOT_PHONE="628xxxxxxxxxx"
-CALLMEBOT_APIKEY=""
-FONNTE_TOKEN=""
-FONNTE_TARGET="628xxxxxxxxxx"
 ```
 
 > ⚠️ **Jangan commit `ADMIN_PIN` / `ADMIN_SESSION_SECRET` asli** ke repo. Gunakan `.env.local` atau Vercel dashboard untuk production.
 
-### Notifikasi kontak
+### Kontak
 
-Pesan **selalu disimpan ke database** lebih dulu. Setelah itu server mencoba mengirim email dan WhatsApp secara paralel. Jika env belum diisi atau provider gagal, pesan tetap tersimpan dan form menampilkan status jujur: "Pesan tersimpan, tetapi notifikasi belum terkirim."
-
-- **Email**: isi `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, dan `CONTACT_FROM_EMAIL`.
-- **WhatsApp CallMeBot**: set `WHATSAPP_PROVIDER="callmebot"`, lalu isi `CALLMEBOT_PHONE` dan `CALLMEBOT_APIKEY` setelah aktivasi di situs CallMeBot.
-- **WhatsApp Fonnte**: set `WHATSAPP_PROVIDER="fonnte"`, lalu isi `FONNTE_TOKEN` dan `FONNTE_TARGET`.
+Pesan dari form kontak hanya disimpan ke database. Website tidak mengirim email atau WhatsApp otomatis, sehingga tidak ada kredensial layanan pihak ketiga yang perlu disimpan.
 
 Profil dan proyek yang tampil di halaman publik dibaca dari database; localStorage hanya dipakai sebagai cache. Jika database belum berisi profil, halaman memakai data seed.
 

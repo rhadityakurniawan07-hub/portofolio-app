@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@repo/database";
 import { validateProjectInput, parseTechStack, normalizeUrl } from "@/lib/portfolio";
-import { requireAdmin } from "@/lib/auth";
+import { requireAdmin, isTrustedOrigin } from "@/lib/auth";
 
 export async function PUT(
   req: NextRequest,
@@ -9,6 +9,9 @@ export async function PUT(
 ) {
   const unauthorized = requireAdmin(req);
   if (unauthorized) return unauthorized;
+  if (!isTrustedOrigin(req)) {
+    return NextResponse.json({ error: "Origin tidak diizinkan" }, { status: 403 });
+  }
 
   try {
     const { id } = await params;
@@ -66,6 +69,9 @@ export async function DELETE(
 ) {
   const unauthorized = requireAdmin(req);
   if (unauthorized) return unauthorized;
+  if (!isTrustedOrigin(req)) {
+    return NextResponse.json({ error: "Origin tidak diizinkan" }, { status: 403 });
+  }
 
   try {
     const { id } = await params;

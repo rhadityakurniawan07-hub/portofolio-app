@@ -1,10 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { isValidPin, setSessionCookie } from "@/lib/auth";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 const MAX_ATTEMPTS = 5;
 const WINDOW_MS = 10 * 60 * 1000;
-
-const loginAttempts = new Map<string, { count: number; resetAt: number }>();
 
 function getClientIp(req: NextRequest): string {
   return (
@@ -14,29 +13,16 @@ function getClientIp(req: NextRequest): string {
   );
 }
 
-function isAllowed(ip: string): boolean {
-  const now = Date.now();
-  const record = loginAttempts.get(ip);
-
-  if (!record || now > record.resetAt) {
-    loginAttempts.set(ip, { count: 1, resetAt: now + WINDOW_MS });
-    return true;
-  }
-
-  if (record.count >= MAX_ATTEMPTS) return false;
-
-  record.count += 1;
-  return true;
-}
-
 export async function POST(req: NextRequest) {
   try {
     const ip = getClientIp(req);
+    const rateLimit = await checkRateLimit(`login:${ip}`, MAX_ATTEMPTS, WINDOW_MS);
 
-    if (!isAllowed(ip)) {
+    if (!rateLimit.allowed) {
+      const retryAfter = Math.ceil(((rateLimit.resetAt ?? Date.now()) - Date.now()) / 1000 / 60);
       return NextResponse.json(
         { error: "Terlalu banyak percobaan. Coba lagi nanti." },
-        { status: 429 }
+        { status: 429, headers: { "Retry-After": String(retryAfter * 60) } }
       );
     }
 
@@ -47,7 +33,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "PIN salah" }, { status: 401 });
     }
 
-    loginAttempts.delete(ip);
     return setSessionCookie(NextResponse.json({ authenticated: true }));
   } catch (error) {
     console.error("[API] POST /api/auth/login error:", error);

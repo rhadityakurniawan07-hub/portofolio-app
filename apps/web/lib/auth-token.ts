@@ -1,3 +1,4 @@
+import "@/lib/env";
 import { createHmac, timingSafeEqual } from "node:crypto";
 
 export const SESSION_COOKIE = "portfolio_admin";

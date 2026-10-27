@@ -1,9 +1,9 @@
-# Task 35: Sinkronisasi Data Publik, Notifikasi Kontak, dan Perbaikan Form
+﻿# Task 35: Sinkronisasi Data Publik, Notifikasi Kontak, dan Perbaikan Form
 
 > Sumber: daftar "Fungsional utama" setelah Task 34 selesai.
-> Status: **DONE** (selesai 2026-10-26). Implementasi dan verifikasi utama sudah dikerjakan.
+> Status: **DONE** (selesai 2026-10-26). Integrasi notifikasi email/WhatsApp kemudian dihapus atas permintaan pemilik; form kontak sekarang hanya menyimpan pesan ke database.
 
-**Tech Stack:** Next.js 16 App Router, React 19, Zustand 5 persist, Prisma/PostgreSQL, Resend (email).
+**Tech Stack:** Next.js 16 App Router, React 19, Zustand 5 persist, Prisma/PostgreSQL.
 
 ## Ringkasan Masalah
 
@@ -272,11 +272,20 @@
 
 ## Hasil Implementasi
 
-- 65 test PASS (node:test), check-types, lint, dan uild PASS.
-- Halaman publik memuat profil/proyek dari GET /api/profile dan GET /api/projects; skeleton ditampilkan sampai data siap.
-- Chrome headless membuktikan proyek DB iseng tampil dan href WhatsApp menjadi https://wa.me/62881012309481.
-- Data WhatsApp lama di DB sudah diperbarui lewat PUT /api/profile dengan sesi admin.
-- Notifikasi kontak dipisah ke lib/contact-notify.ts; mendukung Resend, CallMeBot, dan Fonnte. Respons memakai { success, saved, delivered: { email, whatsapp }, message }.
-- POST /api/contact valid tanpa env menghasilkan saved: true, delivered: false; honeypot menghasilkan 400.
-- Email/WA nyata belum diuji karena RESEND_API_KEY, CONTACT_TO_EMAIL, dan env WhatsApp masih kosong.
-- Belum di-commit; perubahan ada di branch eat/task-35-functional-data-contact.
+- 57 test PASS (node:test), `check-types`, `lint`, dan `build` PASS setelah notifikasi dihapus.
+- Halaman publik memuat profil/proyek dari `GET /api/profile` dan `GET /api/projects`; skeleton ditampilkan sampai data siap.
+- Chrome headless membuktikan proyek DB `iseng` tampil dan href WhatsApp menjadi `https://wa.me/62881012309481`.
+- Data WhatsApp lama di DB sudah diperbarui lewat `PUT /api/profile` dengan sesi admin.
+- `POST /api/contact` sekarang hanya menyimpan pesan ke database dan mengembalikan `{ success, saved, message }`.
+- Honeypot tetap memblokir request spam dengan HTTP 400.
+
+## Perubahan Setelah Implementasi (2026-10-26)
+
+- Integrasi Resend, CallMeBot, dan Fonnte dihapus karena pemilik tidak ingin ada layanan notifikasi pihak ketiga.
+- File `apps/web/lib/contact-notify.ts` dan test-nya dihapus.
+- Semua env notifikasi dihapus dari `.env.example` dan `apps/web/.env.local`.
+- `ContactForm` menampilkan status tersimpan tanpa klaim pengiriman email/WhatsApp.
+- Kriteria acceptance yang menyebut notifikasi email/WhatsApp tidak berlaku lagi.
+- Perbaikan data DB, normalisasi WhatsApp, honeypot, rate limit, dan sinkronisasi DB tetap dipertahankan.
+
+

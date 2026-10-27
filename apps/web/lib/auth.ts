@@ -44,3 +44,24 @@ export function clearSessionCookie(res: NextResponse): NextResponse {
   });
   return res;
 }
+
+export function isTrustedOrigin(req: NextRequest): boolean {
+  const origin = req.headers.get("origin");
+  const referer = req.headers.get("referer");
+  const host = req.headers.get("host");
+  const allowed = new Set<string>();
+
+  if (host) allowed.add(`http://${host}`);
+  if (host) allowed.add(`https://${host}`);
+  if (process.env.NEXT_PUBLIC_APP_URL) allowed.add(process.env.NEXT_PUBLIC_APP_URL.replace(/\/$/, ""));
+
+  if (origin) return allowed.has(origin.replace(/\/$/, ""));
+  if (referer) {
+    try {
+      return allowed.has(new URL(referer).origin);
+    } catch {
+      return false;
+    }
+  }
+  return false;
+}

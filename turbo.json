@@ -1,3 +1,4 @@
+
 {
   "$schema": "https://turborepo.dev/schema.json",
   "ui": "tui",
@@ -5,7 +6,13 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**", "!.next/dev/**"]
+      "outputs": [".next/**", "!.next/cache/**", "!.next/dev/**"],
+      "env": [
+        "DATABASE_URL",
+        "ADMIN_PIN",
+        "ADMIN_SESSION_SECRET",
+        "NEXT_PUBLIC_APP_URL"
+      ]
     },
     "lint": {
       "dependsOn": ["^lint"]

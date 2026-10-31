@@ -146,7 +146,7 @@ export function ProfileEditPanel() {
               </label>
               <input ref={fileRef} id="pe-photo" type="file" accept="image/*" disabled={photoBusy} className="sr-only" onChange={async (e) => { const file = e.target.files?.[0]; if (file) { await handlePhotoFile(file) }; e.target.value = "" }} />
               {photoValue && (
-                <button type="button" onClick={() => setForm({ ...form, photoUrl: "" })} className="text-xs font-medium text-muted-foreground hover:text-red-400 transition-colors">Hapus foto (kembali ke inisial)</button>
+                <button type="button" onClick={() => setForm({ ...form, photoUrl: "" })} className="text-xs font-medium text-muted-foreground hover:text-red-400 transition-colors">Hapus Foto</button>
               )}
             </div>
             <p className="mt-1 text-xs text-muted-foreground">JPG/PNG dari perangkat — otomatis diperkecil agar hemat penyimpanan</p>
@@ -169,7 +169,7 @@ export function ProfileEditPanel() {
               </label>
               <input ref={fileRefAbout} id="pe-about-photo" type="file" accept="image/*" disabled={photoBusy} className="sr-only" onChange={async (e) => { const file = e.target.files?.[0]; if (file) { await handlePhotoFile(file, "aboutPhotoUrl") }; e.target.value = "" }} />
               {aboutPhotoValue && (
-                <button type="button" onClick={() => setForm({ ...form, aboutPhotoUrl: "" })} className="text-xs font-medium text-muted-foreground hover:text-red-400 transition-colors">Hapus foto (kembali ke inisial)</button>
+                <button type="button" onClick={() => setForm({ ...form, aboutPhotoUrl: "" })} className="text-xs font-medium text-muted-foreground hover:text-red-400 transition-colors">Hapus Foto</button>
               )}
             </div>
             <p className="mt-1 text-xs text-muted-foreground">Foto aktivitas untuk section Tentang Saya</p>

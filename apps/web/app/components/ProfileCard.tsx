@@ -50,67 +50,69 @@ export function ProfileCard() {
           </h2>
         </div>
 
-        <table className="w-full border-collapse" aria-labelledby="profil-heading">
-          <tbody>
-            {infoRows.map((row, index) => (
-              <tr key={row.label} className={index > 0 ? 'border-t border-gray-800' : ''}>
-                <th
-                  scope="row"
-                  className="w-40 py-4 pr-4 font-mono text-xs uppercase tracking-wider text-muted-foreground font-medium"
-                >
-                  {row.label}
-                </th>
-                <td className="py-4">
-                  {row.badges ? (
-                    <div className="flex flex-wrap gap-1.5">
-                      {row.badges.map((badge: string) => (
-                        <TechBadge key={badge} name={badge} />
-                      ))}
-                    </div>
-                  ) : row.links ? (
-                    <div className="flex flex-wrap items-center gap-3">
-                      {row.links.map((link) => {
-                        const Icon = iconMap[link.icon];
-                        return (
-                          <a
-                            key={link.label}
-                            href={link.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1.5 font-medium text-primary hover:underline"
-                          >
-                            <Icon className="h-4 w-4" aria-hidden="true" />
-                            {link.label}
-                          </a>
-                        );
-                      })}
-                    </div>
-                  ) : row.copyable ? (
-                    <div className="flex items-center gap-2">
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse min-w-[400px]">
+            <tbody>
+              {infoRows.map((row, index) => (
+                <tr key={row.label} className={index > 0 ? 'border-t border-gray-800' : ''}>
+                  <th
+                    scope="row"
+                    className="min-w-[140px] w-auto py-4 pr-4 font-mono text-xs uppercase tracking-wider text-muted-foreground font-medium break-words"
+                  >
+                    {row.label}
+                  </th>
+                  <td className="py-4 break-words">
+                    {row.badges ? (
+                      <div className="flex flex-wrap gap-1.5">
+                        {row.badges.map((badge: string) => (
+                          <TechBadge key={badge} name={badge} />
+                        ))}
+                      </div>
+                    ) : row.links ? (
+                      <div className="flex flex-wrap items-center gap-3">
+                        {row.links.map((link) => {
+                          const Icon = iconMap[link.icon];
+                          return (
+                            <a
+                              key={link.label}
+                              href={link.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1.5 font-medium text-primary hover:underline"
+                            >
+                              <Icon className="h-4 w-4" aria-hidden="true" />
+                              {link.label}
+                            </a>
+                          );
+                        })}
+                      </div>
+                    ) : row.copyable ? (
+                      <div className="flex items-center gap-2">
+                        <span className="text-foreground">{row.value}</span>
+                        <button
+                          onClick={handleCopyEmail}
+                          className="inline-flex h-8 w-8 items-center justify-center rounded-md text-gray-400 transition-colors hover:bg-white/5 hover:text-foreground focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-black"
+                          aria-label={copied ? "Email disalin" : "Salin email"}
+                        >
+                          {copied ? (
+                            <Check className="h-4 w-4 text-green-500" aria-hidden="true" />
+                          ) : (
+                            <Copy className="h-4 w-4" aria-hidden="true" />
+                          )}
+                        </button>
+                        <span role="status" className="sr-only">
+                          {copied ? "Email disalin" : ""}
+                        </span>
+                      </div>
+                    ) : (
                       <span className="text-foreground">{row.value}</span>
-                      <button
-                        onClick={handleCopyEmail}
-                        className="inline-flex h-8 w-8 items-center justify-center rounded-md text-gray-400 transition-colors hover:bg-white/5 hover:text-foreground focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-black"
-                        aria-label={copied ? "Email disalin" : "Salin email"}
-                      >
-                        {copied ? (
-                          <Check className="h-4 w-4 text-green-500" aria-hidden="true" />
-                        ) : (
-                          <Copy className="h-4 w-4" aria-hidden="true" />
-                        )}
-                      </button>
-                      <span role="status" className="sr-only">
-                        {copied ? "Email disalin" : ""}
-                      </span>
-                    </div>
-                  ) : (
-                    <span className="text-foreground">{row.value}</span>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
         <div className="editorial-divider px-6 py-4 flex flex-col items-center justify-between gap-3 sm:flex-row">
           <p className="text-sm text-muted-foreground">Ingin melihat hasil pengerjaan proyek?</p>

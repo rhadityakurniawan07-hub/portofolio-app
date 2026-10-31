@@ -43,9 +43,9 @@ export default function AdminPage() {
 
   return (
     <div className="container py-12">
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-8 flex items-center justify-between flex-wrap gap-3">
         <div>
-          <div className="mb-2 flex items-center gap-3">
+          <div className="mb-2 flex items-center gap-3 flex-wrap">
             <h1 className="text-3xl font-bold">Dashboard Admin</h1>
             <span className="inline-flex items-center gap-1.5 rounded-md border border-red-600/50 bg-red-600/10 px-2.5 py-1 text-xs font-mono font-medium text-red-400">
               <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
@@ -54,7 +54,7 @@ export default function AdminPage() {
           </div>
           <p className="text-muted-foreground">Kelola profil dan proyek Anda.</p>
         </div>
-        <button onClick={() => void handleLogout()} className="rounded-md border border-gray-700 px-4 py-2 text-sm hover:bg-gray-800">
+        <button onClick={() => void handleLogout()} className="rounded-md border border-gray-700 px-4 py-2 text-sm hover:bg-gray-800 whitespace-nowrap">
           Keluar
         </button>
       </div>

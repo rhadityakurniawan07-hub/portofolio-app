@@ -151,7 +151,7 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
                   onClick={() => setForm({ ...form, photoUrl: "" })}
                   className="text-xs font-medium text-muted-foreground hover:text-red-400 transition-colors"
                 >
-                  Hapus foto (kembali ke inisial)
+                  Hapus Foto
                 </button>
               )}
             </div>
@@ -198,7 +198,7 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
                   onClick={() => setForm({ ...form, aboutPhotoUrl: "" })}
                   className="text-xs font-medium text-muted-foreground hover:text-red-400 transition-colors"
                 >
-                  Hapus foto (kembali ke inisial)
+                  Hapus Foto
                 </button>
               )}
             </div>
